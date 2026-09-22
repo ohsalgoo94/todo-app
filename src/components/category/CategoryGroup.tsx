@@ -9,7 +9,10 @@ type Props = {
 };
 
 export default function CategoryGroup({ category, date }: Props) {
-  const tasks = useAppStore((s) => s.tasks.filter((t) => t.categoryId === category.id && t.date === date));
+  // 셀렉터 안에서 .filter()로 매번 새 배열을 반환하면 zustand가 무한 렌더 루프에 빠지므로,
+  // 원본 배열만 구독하고 필터링은 렌더 본문에서 한다.
+  const allTasks = useAppStore((s) => s.tasks);
+  const tasks = allTasks.filter((t) => t.categoryId === category.id && t.date === date);
   const addTask = useAppStore((s) => s.addTask);
   const updateCategory = useAppStore((s) => s.updateCategory);
 
