@@ -27,9 +27,9 @@ export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) 
         className="flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800"
       >
         {activeScreen === "pay" ? (
-          <img src="/icons/piggy-active.png" alt="" className="h-7 w-auto animate-coin-drop" />
+          <img src="/icons/piggy-active.png" alt="" className="h-6 w-auto animate-coin-drop" />
         ) : (
-          <img src="/icons/piggy-idle.png" alt="" className="h-7 w-auto dark:invert" />
+          <img src="/icons/piggy-idle.png" alt="" className="h-6 w-auto dark:invert" />
         )}
       </button>
     </nav>
