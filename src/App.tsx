@@ -1,12 +1,14 @@
 import { format, startOfMonth } from "date-fns";
 import { useState } from "react";
 import Calendar from "./components/calendar/Calendar";
+import CategoryMenu from "./components/category/CategoryMenu";
 import BottomBar from "./components/layout/BottomBar";
 import { shiftMonth, toDateKey } from "./lib/date";
 
 export default function App() {
   const [viewedMonth, setViewedMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
+  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
 
   const handleShiftMonth = (delta: number) => setViewedMonth((m) => shiftMonth(m, delta));
 
@@ -42,6 +44,7 @@ export default function App() {
         <button
           type="button"
           aria-label="카테고리 메뉴"
+          onClick={() => setIsCategoryMenuOpen(true)}
           className="flex h-11 w-11 items-center justify-center rounded-full text-gray-700 active:bg-gray-100 dark:text-gray-200 dark:active:bg-gray-800"
         >
           <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
@@ -49,6 +52,8 @@ export default function App() {
           </svg>
         </button>
       </header>
+
+      <CategoryMenu isOpen={isCategoryMenuOpen} onClose={() => setIsCategoryMenuOpen(false)} />
 
       <main className="flex-1 overflow-y-auto px-2 pb-4">
         <Calendar
