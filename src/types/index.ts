@@ -3,7 +3,6 @@ export type Category = {
   name: string;
   color: string; // defaults.json 팔레트 중 하나
   order: number;
-  collapsed: boolean;
 };
 
 export type Alarm = { hour: number; minute: number }; // hour 0~23, minute 0~55 (5분 단위)

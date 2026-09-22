@@ -1,4 +1,14 @@
-import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import { format, parseISO, startOfMonth } from "date-fns";
 import { ko } from "date-fns/locale";
 import { useEffect, useState } from "react";
@@ -27,6 +37,8 @@ export default function App() {
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
+  const [activeDragTaskId, setActiveDragTaskId] = useState<string | null>(null);
+  const [dragOverride, setDragOverride] = useState<{ taskId: string; categoryId: string } | null>(null);
   const restoreTask = useAppStore((s) => s.restoreTask);
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const reorderTasksWithinCategory = useAppStore((s) => s.reorderTasksWithinCategory);
@@ -42,7 +54,36 @@ export default function App() {
   const taskCountOnSelectedDate = displayTasksForSelectedDate.length;
   const selectedTask = displayTasksForSelectedDate.find((t) => t.id === selectedTaskId);
 
+  const resolveTargetCategoryId = (overId: string) =>
+    overId.startsWith("category:")
+      ? overId.slice("category:".length)
+      : displayTasksForSelectedDate.find((t) => t.id === overId)?.categoryId;
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveDragTaskId(String(event.active.id));
+  };
+
+  // 다른 카테고리 위로 끌고 가면, 놓기 전이라도 그 카테고리 목록에 바로 끼워 넣어 보여준다
+  // (실제 저장은 안 하고 화면 표시만 바꿔서, 드래그 중 다른 항목들이 자연스럽게 애니메이션으로 자리를 비켜준다)
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) {
+      setDragOverride(null);
+      return;
+    }
+    const draggedTask = displayTasksForSelectedDate.find((t) => t.id === active.id);
+    const targetCategoryId = resolveTargetCategoryId(String(over.id));
+    if (!draggedTask || !targetCategoryId || targetCategoryId === draggedTask.categoryId) {
+      setDragOverride(null);
+      return;
+    }
+    setDragOverride({ taskId: String(active.id), categoryId: targetCategoryId });
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveDragTaskId(null);
+    setDragOverride(null);
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -55,9 +96,7 @@ export default function App() {
       : draggedTask.id;
 
     const overId = String(over.id);
-    const targetCategoryId = overId.startsWith("category:")
-      ? overId.slice("category:".length)
-      : displayTasksForSelectedDate.find((t) => t.id === overId)?.categoryId;
+    const targetCategoryId = resolveTargetCategoryId(overId);
     if (!targetCategoryId) return;
 
     if (targetCategoryId !== draggedTask.categoryId) {
@@ -77,6 +116,8 @@ export default function App() {
     reordered.splice(newIndex, 0, realId);
     reorderTasksWithinCategory(targetCategoryId, selectedDate, reordered);
   };
+
+  const activeDragTask = displayTasksForSelectedDate.find((t) => t.id === activeDragTaskId);
 
   useEffect(() => {
     if (!deletedTask) return;
@@ -147,10 +188,28 @@ export default function App() {
           <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
             {format(parseISO(selectedDate), "M월 d일 (EEE)", { locale: ko })}
           </p>
-          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
             {categories.map((c) => (
-              <CategoryGroup key={c.id} category={c} date={selectedDate} onOpenTask={setSelectedTaskId} />
+              <CategoryGroup
+                key={c.id}
+                category={c}
+                date={selectedDate}
+                onOpenTask={setSelectedTaskId}
+                dragOverride={dragOverride}
+              />
             ))}
+            <DragOverlay>
+              {activeDragTask && (
+                <div className="rounded-xl bg-white px-3 py-1.5 text-sm text-gray-900 shadow-lg dark:bg-gray-800 dark:text-gray-100">
+                  {activeDragTask.title}
+                </div>
+              )}
+            </DragOverlay>
           </DndContext>
           {taskCountOnSelectedDate === 0 && (
             <p className="px-2 py-6 text-center text-sm text-gray-400 dark:text-gray-500">

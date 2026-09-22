@@ -8,7 +8,7 @@ const STORAGE_KEY = "todo-app:v1";
 
 type AppStore = AppData & {
   addCategory: (name: string, color: string) => void;
-  updateCategory: (id: string, patch: Partial<Pick<Category, "name" | "color" | "collapsed">>) => void;
+  updateCategory: (id: string, patch: Partial<Pick<Category, "name" | "color">>) => void;
   deleteCategory: (id: string) => void;
   addTask: (categoryId: string, date: string, title: string) => void;
   toggleTaskDone: (id: string) => void;
@@ -49,7 +49,6 @@ function createDefaultState(): AppData {
       name: c.name,
       color: c.color,
       order: i,
-      collapsed: false,
     })),
     tasks: [],
     routines: [],
@@ -67,7 +66,7 @@ export const useAppStore = create<AppStore>()(
         set((s) => ({
           categories: [
             ...s.categories,
-            { id: crypto.randomUUID(), name, color, order: s.categories.length, collapsed: false },
+            { id: crypto.randomUUID(), name, color, order: s.categories.length },
           ],
         })),
       updateCategory: (id, patch) =>
