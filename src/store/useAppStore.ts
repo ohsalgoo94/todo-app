@@ -1,9 +1,23 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist, type PersistStorage } from "zustand/middleware";
 import defaults from "../data/defaults.json";
 import type { AppData } from "../types";
 
 const STORAGE_KEY = "todo-app:v1";
+
+// zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
+// 스펙대로 localStorage 값 자체가 AppData가 되도록 감싸는 겹을 벗겨서 읽고 쓴다.
+// 마이그레이션은 zustand의 version이 아니라 AppData.version 필드로 직접 처리한다.
+const flatStorage: PersistStorage<AppData> = {
+  getItem: (name) => {
+    const raw = localStorage.getItem(name);
+    return raw ? { state: JSON.parse(raw) as AppData, version: 0 } : null;
+  },
+  setItem: (name, value) => {
+    localStorage.setItem(name, JSON.stringify(value.state));
+  },
+  removeItem: (name) => localStorage.removeItem(name),
+};
 
 function createDefaultState(): AppData {
   return {
@@ -27,7 +41,7 @@ const isFirstRun = localStorage.getItem(STORAGE_KEY) === null;
 export const useAppStore = create<AppData>()(
   persist(createDefaultState, {
     name: STORAGE_KEY,
-    storage: createJSONStorage(() => localStorage),
+    storage: flatStorage,
   }),
 );
 
