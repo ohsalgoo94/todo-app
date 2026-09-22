@@ -31,8 +31,8 @@ export default function DayRing({ totalCount, segments }: Props) {
   return (
     <div
       style={backgroundImage ? { backgroundImage } : undefined}
-      className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium text-gray-600 dark:text-gray-200 ${
-        backgroundImage ? "" : "bg-white dark:bg-gray-800"
+      className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium text-white ${
+        backgroundImage ? "" : "bg-gray-400 dark:bg-gray-600"
       }`}
     >
       {remainingCount}
