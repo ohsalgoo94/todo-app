@@ -1,6 +1,10 @@
+import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import defaults from "../../data/defaults.json";
 import { useAppStore } from "../../store/useAppStore";
+import type { Category } from "../../types";
 
 type Props = {
   isOpen: boolean;
@@ -8,16 +12,22 @@ type Props = {
 };
 
 export default function CategoryMenu({ isOpen, onClose }: Props) {
-  const categories = useAppStore((s) => s.categories);
+  const categories = useAppStore((s) => s.categories.slice().sort((a, b) => a.order - b.order));
   const tasks = useAppStore((s) => s.tasks);
   const addCategory = useAppStore((s) => s.addCategory);
   const updateCategory = useAppStore((s) => s.updateCategory);
   const deleteCategory = useAppStore((s) => s.deleteCategory);
+  const reorderCategories = useAppStore((s) => s.reorderCategories);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [draftName, setDraftName] = useState("");
   const [draftColor, setDraftColor] = useState(defaults.palette[0]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
+  );
 
   const startEdit = (id: string, name: string, color: string) => {
     setEditingId(id);
@@ -57,6 +67,16 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
     if (editingId === id) cancelDraft();
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const ids = categories.map((c) => c.id);
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex === -1 || newIndex === -1) return;
+    reorderCategories(arrayMove(ids, oldIndex, newIndex));
+  };
+
   return (
     <>
       {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />}
@@ -67,55 +87,45 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
       >
         <div className="flex-1 overflow-y-auto p-4">
           <h2 className="mb-3 font-semibold text-gray-900 dark:text-gray-100">카테고리</h2>
-          <ul className="space-y-1">
-            {categories.map((c) => (
-              <li key={c.id}>
-                {editingId === c.id ? (
-                  <DraftForm
-                    name={draftName}
-                    color={draftColor}
-                    onNameChange={setDraftName}
-                    onColorChange={setDraftColor}
-                    onSave={saveDraft}
-                    onCancel={cancelDraft}
-                  />
-                ) : (
-                  <div className="flex items-center gap-2 rounded-xl px-2 py-2">
-                    <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
-                    <span className="flex-1 truncate text-sm text-gray-900 dark:text-gray-100">{c.name}</span>
-                    <button
-                      type="button"
-                      aria-label="이름/색 수정"
-                      onClick={() => startEdit(c.id, c.name, c.color)}
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 active:bg-gray-100 dark:active:bg-gray-800"
-                    >
-                      ✎
-                    </button>
-                    <button
-                      type="button"
-                      aria-label="삭제"
-                      onClick={() => handleDelete(c.id, c.name)}
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 active:bg-gray-100 dark:active:bg-gray-800"
-                    >
-                      🗑
-                    </button>
-                  </div>
+          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <SortableContext items={categories.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+              <ul className="space-y-1">
+                {categories.map((c) =>
+                  editingId === c.id ? (
+                    <li key={c.id}>
+                      <DraftForm
+                        name={draftName}
+                        color={draftColor}
+                        onNameChange={setDraftName}
+                        onColorChange={setDraftColor}
+                        onSave={saveDraft}
+                        onCancel={cancelDraft}
+                      />
+                    </li>
+                  ) : (
+                    <SortableCategoryRow
+                      key={c.id}
+                      category={c}
+                      onEdit={() => startEdit(c.id, c.name, c.color)}
+                      onDelete={() => handleDelete(c.id, c.name)}
+                    />
+                  ),
                 )}
-              </li>
-            ))}
-            {isAdding && (
-              <li>
-                <DraftForm
-                  name={draftName}
-                  color={draftColor}
-                  onNameChange={setDraftName}
-                  onColorChange={setDraftColor}
-                  onSave={saveDraft}
-                  onCancel={cancelDraft}
-                />
-              </li>
-            )}
-          </ul>
+              </ul>
+            </SortableContext>
+          </DndContext>
+          {isAdding && (
+            <div className="mt-1">
+              <DraftForm
+                name={draftName}
+                color={draftColor}
+                onNameChange={setDraftName}
+                onColorChange={setDraftColor}
+                onSave={saveDraft}
+                onCancel={cancelDraft}
+              />
+            </div>
+          )}
         </div>
         <div className="border-t border-gray-200 p-4 dark:border-gray-800">
           <button
@@ -128,6 +138,51 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
         </div>
       </aside>
     </>
+  );
+}
+
+type SortableCategoryRowProps = {
+  category: Category;
+  onEdit: () => void;
+  onDelete: () => void;
+};
+
+function SortableCategoryRow({ category, onEdit, onDelete }: SortableCategoryRowProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: category.id });
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 }}
+      className="flex items-center gap-2 rounded-xl px-2 py-2"
+    >
+      <span
+        {...attributes}
+        {...listeners}
+        aria-label="순서 변경"
+        className="flex h-8 w-6 shrink-0 touch-manipulation cursor-grab items-center justify-center text-gray-300 dark:text-gray-600"
+      >
+        ⠿
+      </span>
+      <span className="h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: category.color }} />
+      <span className="flex-1 truncate text-sm text-gray-900 dark:text-gray-100">{category.name}</span>
+      <button
+        type="button"
+        aria-label="이름/색 수정"
+        onClick={onEdit}
+        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 active:bg-gray-100 dark:active:bg-gray-800"
+      >
+        ✎
+      </button>
+      <button
+        type="button"
+        aria-label="삭제"
+        onClick={onDelete}
+        className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 active:bg-gray-100 dark:active:bg-gray-800"
+      >
+        🗑
+      </button>
+    </li>
   );
 }
 

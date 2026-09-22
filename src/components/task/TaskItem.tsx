@@ -1,4 +1,6 @@
-import { useState, type MouseEvent } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useState, type MouseEvent, type PointerEvent } from "react";
 import { isVirtualTaskId } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
 import type { Task } from "../../types";
@@ -13,6 +15,8 @@ export default function TaskItem({ task, onOpen }: Props) {
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const [pop, setPop] = useState(false);
 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
+
   const handleToggle = (e: MouseEvent) => {
     e.stopPropagation();
     const willBeDone = !task.done;
@@ -25,19 +29,25 @@ export default function TaskItem({ task, onOpen }: Props) {
     }
   };
 
+  // 체크박스는 드래그 시작 대상에서 제외 (pointerdown이 위 row의 드래그 리스너로 버블링되지 않게)
+  const stopPointerDown = (e: PointerEvent) => e.stopPropagation();
+
   return (
     <div
-      role="button"
-      tabIndex={0}
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 }}
       onClick={onOpen}
       onKeyDown={(e) => {
         if (e.key === "Enter") onOpen();
       }}
-      className="flex items-start gap-2 py-1"
+      {...attributes}
+      {...listeners}
+      className="flex touch-manipulation items-start gap-2 py-1"
     >
       <button
         type="button"
         onClick={handleToggle}
+        onPointerDown={stopPointerDown}
         aria-label={task.done ? "완료 취소" : "완료로 표시"}
         aria-pressed={task.done}
         className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${

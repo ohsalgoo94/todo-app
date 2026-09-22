@@ -49,5 +49,5 @@ export function getDisplayTasksForDate(tasks: Task[], routines: Routine[], date:
       order: realTasksOnDate.length + i,
     }));
 
-  return [...realTasksOnDate, ...virtualTasks];
+  return [...realTasksOnDate, ...virtualTasks].sort((a, b) => a.order - b.order);
 }

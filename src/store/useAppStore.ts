@@ -20,6 +20,9 @@ type AppStore = AppData & {
   createRoutineFromTask: (taskId: string, rule: Routine["rule"], endDate?: string) => void;
   deleteRoutineOccurrence: (routineId: string, date: string) => void;
   endRoutineFrom: (routineId: string, date: string) => void;
+  reorderTasksWithinCategory: (categoryId: string, date: string, orderedTaskIds: string[]) => void;
+  moveTaskToCategory: (taskId: string, categoryId: string) => void;
+  reorderCategories: (orderedCategoryIds: string[]) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -164,6 +167,30 @@ export const useAppStore = create<AppStore>()(
             r.id === routineId ? { ...r, endDate: addDaysToKey(date, -1) } : r,
           ),
           tasks: s.tasks.filter((t) => !(t.routineId === routineId && t.date >= date)),
+        })),
+      reorderTasksWithinCategory: (categoryId, date, orderedTaskIds) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) => {
+            if (t.categoryId !== categoryId || t.date !== date) return t;
+            const newOrder = orderedTaskIds.indexOf(t.id);
+            return newOrder === -1 ? t : { ...t, order: newOrder };
+          }),
+        })),
+      moveTaskToCategory: (taskId, categoryId) =>
+        set((s) => {
+          const task = s.tasks.find((t) => t.id === taskId);
+          if (!task) return {};
+          const order = s.tasks.filter((t) => t.categoryId === categoryId && t.date === task.date).length;
+          return {
+            tasks: s.tasks.map((t) => (t.id === taskId ? { ...t, categoryId, order } : t)),
+          };
+        }),
+      reorderCategories: (orderedCategoryIds) =>
+        set((s) => ({
+          categories: s.categories.map((c) => {
+            const newOrder = orderedCategoryIds.indexOf(c.id);
+            return newOrder === -1 ? c : { ...c, order: newOrder };
+          }),
         })),
     }),
     {

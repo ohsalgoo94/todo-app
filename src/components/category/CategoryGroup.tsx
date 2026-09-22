@@ -1,3 +1,5 @@
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useState } from "react";
 import { getDisplayTasksForDate } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
@@ -9,6 +11,10 @@ type Props = {
   date: string;
   onOpenTask: (taskId: string) => void;
 };
+
+export function categoryDroppableId(categoryId: string): string {
+  return `category:${categoryId}`;
+}
 
 export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   // 셀렉터 안에서 .filter()로 매번 새 배열을 반환하면 zustand가 무한 렌더 루프에 빠지므로,
@@ -22,6 +28,9 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
 
+  // 접힌 카테고리로도 드래그해서 옮길 수 있도록, 헤더가 있는 바깥 영역 전체를 드롭 타깃으로 둔다
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({ id: categoryDroppableId(category.id) });
+
   const toggleCollapsed = () => updateCategory(category.id, { collapsed: !category.collapsed });
 
   const saveDraft = () => {
@@ -32,7 +41,7 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   };
 
   return (
-    <div className="mb-2">
+    <div ref={setDroppableRef} className={`mb-2 rounded-2xl ${isOver ? "bg-gray-100 dark:bg-gray-800" : ""}`}>
       <div className="flex items-center gap-2 px-2 py-1.5">
         <button
           type="button"
@@ -58,15 +67,17 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
 
       {!category.collapsed && (
         <div className="ml-8 space-y-1">
-          {tasks.map((t) => (
-            // 루틴 할 일은 체크하는 순간 가상 id에서 실제 id로 바뀌는데, routineId+date로 key를 고정해
-            // 그 전환 때 컴포넌트가 다시 마운트되며 체크 애니메이션이 끊기지 않게 한다.
-            <TaskItem
-              key={t.routineId ? `${t.routineId}:${t.date}` : t.id}
-              task={t}
-              onOpen={() => onOpenTask(t.id)}
-            />
-          ))}
+          <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+            {tasks.map((t) => (
+              // 루틴 할 일은 체크하는 순간 가상 id에서 실제 id로 바뀌는데, routineId+date로 key를 고정해
+              // 그 전환 때 컴포넌트가 다시 마운트되며 체크 애니메이션이 끊기지 않게 한다.
+              <TaskItem
+                key={t.routineId ? `${t.routineId}:${t.date}` : t.id}
+                task={t}
+                onOpen={() => onOpenTask(t.id)}
+              />
+            ))}
+          </SortableContext>
           {isAdding && (
             <input
               autoFocus
