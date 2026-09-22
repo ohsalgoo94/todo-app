@@ -1,0 +1,19 @@
+{
+  "categories": [
+    { "name": "개인", "color": "#F6A6B2" },
+    { "name": "공부", "color": "#A6C8F0" },
+    { "name": "운동", "color": "#A8E0B0" }
+  ],
+  "palette": [
+    "#F6A6B2",
+    "#A6C8F0",
+    "#A8E0B0",
+    "#F5D08A",
+    "#C9A8EA",
+    "#8FE0D4",
+    "#F0A8D8",
+    "#B8B4F0",
+    "#F0C48A",
+    "#8FD0EA"
+  ]
+}

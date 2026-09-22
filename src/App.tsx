@@ -1,6 +1,9 @@
 import BottomBar from "./components/layout/BottomBar";
+import { useAppStore } from "./store/useAppStore";
 
 export default function App() {
+  const categories = useAppStore((s) => s.categories);
+
   const handleGoToday = () => {
     // 3단계(캘린더)에서 실제 동작 연결
   };
@@ -21,6 +24,8 @@ export default function App() {
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 text-gray-500 dark:text-gray-400">
+        기본 카테고리 {categories.length}개 로드됨: {categories.map((c) => c.name).join(", ")}
+        <br />
         (메모 / 캘린더 / 할 일 목록은 다음 단계에서 채워집니다)
       </main>
 
