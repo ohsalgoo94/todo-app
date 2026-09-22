@@ -11,9 +11,10 @@ type Props = {
   selectedDate: string;
   onSelectDate: (dateKey: string) => void;
   onShiftMonth: (delta: number) => void;
+  compact?: boolean;
 };
 
-export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth }: Props) {
+export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth, compact = false }: Props) {
   const tasks = useAppStore((s) => s.tasks);
   const categories = useAppStore((s) => s.categories);
   const dayMemos = useAppStore((s) => s.dayMemos);
@@ -46,8 +47,22 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
       <div className="grid grid-cols-7">
         {days.map((date) => {
           const dateKey = toDateKey(date);
-          const dateTasks = tasks.filter((t) => t.date === dateKey);
 
+          if (compact) {
+            return (
+              <DayCell
+                key={dateKey}
+                date={date}
+                isCurrentMonth={date.getMonth() === viewedMonth.getMonth()}
+                isToday={dateKey === todayKey}
+                isSelected={dateKey === selectedDate}
+                compact
+                onSelect={() => onSelectDate(dateKey)}
+              />
+            );
+          }
+
+          const dateTasks = tasks.filter((t) => t.date === dateKey);
           const doneCountByCategory = new Map<string, number>();
           for (const t of dateTasks) {
             if (!t.done) continue;

@@ -6,9 +6,10 @@ type Props = {
   isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
-  totalCount: number;
-  segments: CategorySegment[];
-  hasMemo: boolean;
+  totalCount?: number;
+  segments?: CategorySegment[];
+  hasMemo?: boolean;
+  compact?: boolean;
   onSelect: () => void;
 };
 
@@ -17,9 +18,10 @@ export default function DayCell({
   isCurrentMonth,
   isToday,
   isSelected,
-  totalCount,
-  segments,
-  hasMemo,
+  totalCount = 0,
+  segments = [],
+  hasMemo = false,
+  compact = false,
   onSelect,
 }: Props) {
   return (
@@ -40,9 +42,9 @@ export default function DayCell({
         }`}
       >
         {format(date, "d")}
-        {hasMemo && <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-sky-400" />}
+        {hasMemo && !compact && <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-sky-400" />}
       </span>
-      <DayRing totalCount={totalCount} segments={segments} />
+      {!compact && <DayRing totalCount={totalCount} segments={segments} />}
     </button>
   );
 }
