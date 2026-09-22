@@ -3,7 +3,6 @@ import DayRing, { type CategorySegment } from "./DayRing";
 
 type Props = {
   date: Date;
-  isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
   totalCount?: number;
@@ -15,7 +14,6 @@ type Props = {
 
 export default function DayCell({
   date,
-  isCurrentMonth,
   isToday,
   isSelected,
   totalCount = 0,
@@ -36,9 +34,7 @@ export default function DayCell({
             ? "bg-rose-500 font-semibold text-white"
             : isToday
               ? "font-semibold text-rose-500 ring-2 ring-rose-400"
-              : isCurrentMonth
-                ? "text-gray-900 dark:text-gray-100"
-                : "text-gray-300 dark:text-gray-600"
+              : "text-gray-900 dark:text-gray-100"
         }`}
       >
         {format(date, "d")}

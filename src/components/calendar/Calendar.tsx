@@ -49,13 +49,18 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
       <div className="grid grid-cols-7">
         {days.map((date) => {
           const dateKey = toDateKey(date);
+          const isCurrentMonth = date.getMonth() === viewedMonth.getMonth();
+
+          // 이전/다음 달 날짜는 칸만 비워두고 숫자·할 일 정보를 보여주지 않는다
+          if (!isCurrentMonth) {
+            return <div key={dateKey} />;
+          }
 
           if (compact) {
             return (
               <DayCell
                 key={dateKey}
                 date={date}
-                isCurrentMonth={date.getMonth() === viewedMonth.getMonth()}
                 isToday={dateKey === todayKey}
                 isSelected={dateKey === selectedDate}
                 compact
@@ -78,7 +83,6 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
             <DayCell
               key={dateKey}
               date={date}
-              isCurrentMonth={date.getMonth() === viewedMonth.getMonth()}
               isToday={dateKey === todayKey}
               isSelected={dateKey === selectedDate}
               totalCount={dateTasks.length}
