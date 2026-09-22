@@ -12,7 +12,10 @@ type Props = {
 };
 
 export default function CategoryMenu({ isOpen, onClose }: Props) {
-  const categories = useAppStore((s) => s.categories.slice().sort((a, b) => a.order - b.order));
+  // 셀렉터 안에서 .slice().sort()로 매번 새 배열을 반환하면 무한 렌더 루프에 빠지므로,
+  // 원본 배열만 구독하고 정렬은 렌더 본문에서 한다.
+  const unsortedCategories = useAppStore((s) => s.categories);
+  const categories = unsortedCategories.slice().sort((a, b) => a.order - b.order);
   const tasks = useAppStore((s) => s.tasks);
   const addCategory = useAppStore((s) => s.addCategory);
   const updateCategory = useAppStore((s) => s.updateCategory);
