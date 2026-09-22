@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getDisplayTasksForDate } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
 import TaskItem from "../task/TaskItem";
 import type { Category } from "../../types";
@@ -11,9 +12,10 @@ type Props = {
 
 export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   // 셀렉터 안에서 .filter()로 매번 새 배열을 반환하면 zustand가 무한 렌더 루프에 빠지므로,
-  // 원본 배열만 구독하고 필터링은 렌더 본문에서 한다.
+  // 원본 배열만 구독하고 필터링/루틴 계산은 렌더 본문에서 한다.
   const allTasks = useAppStore((s) => s.tasks);
-  const tasks = allTasks.filter((t) => t.categoryId === category.id && t.date === date);
+  const routines = useAppStore((s) => s.routines);
+  const tasks = getDisplayTasksForDate(allTasks, routines, date).filter((t) => t.categoryId === category.id);
   const addTask = useAppStore((s) => s.addTask);
   const updateCategory = useAppStore((s) => s.updateCategory);
 
@@ -57,7 +59,13 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
       {!category.collapsed && (
         <div className="ml-8 space-y-1">
           {tasks.map((t) => (
-            <TaskItem key={t.id} task={t} onOpen={() => onOpenTask(t.id)} />
+            // 루틴 할 일은 체크하는 순간 가상 id에서 실제 id로 바뀌는데, routineId+date로 key를 고정해
+            // 그 전환 때 컴포넌트가 다시 마운트되며 체크 애니메이션이 끊기지 않게 한다.
+            <TaskItem
+              key={t.routineId ? `${t.routineId}:${t.date}` : t.id}
+              task={t}
+              onOpen={() => onOpenTask(t.id)}
+            />
           ))}
           {isAdding && (
             <input

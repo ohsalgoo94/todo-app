@@ -8,6 +8,7 @@ import BottomBar from "./components/layout/BottomBar";
 import DayMemo from "./components/memo/DayMemo";
 import TaskDetailModal from "./components/task/TaskDetailModal";
 import { shiftMonth, toDateKey } from "./lib/date";
+import { getDisplayTasksForDate } from "./lib/routine";
 import { useAppStore } from "./store/useAppStore";
 import type { Task } from "./types";
 
@@ -15,14 +16,19 @@ const UNDO_TOAST_MS = 4000;
 
 export default function App() {
   const categories = useAppStore((s) => s.categories);
+  const allTasks = useAppStore((s) => s.tasks);
+  const routines = useAppStore((s) => s.routines);
   const [viewedMonth, setViewedMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
-  const taskCountOnSelectedDate = useAppStore((s) => s.tasks.filter((t) => t.date === selectedDate).length);
-  const selectedTask = useAppStore((s) => s.tasks.find((t) => t.id === selectedTaskId));
   const restoreTask = useAppStore((s) => s.restoreTask);
+
+  // 루틴에서 계산되는 가상 할 일까지 포함한, 선택한 날짜의 전체 목록 (store 셀렉터 밖에서 계산)
+  const displayTasksForSelectedDate = getDisplayTasksForDate(allTasks, routines, selectedDate);
+  const taskCountOnSelectedDate = displayTasksForSelectedDate.length;
+  const selectedTask = displayTasksForSelectedDate.find((t) => t.id === selectedTaskId);
 
   useEffect(() => {
     if (!deletedTask) return;
@@ -111,6 +117,7 @@ export default function App() {
           task={selectedTask}
           onClose={() => setSelectedTaskId(null)}
           onDeleted={setDeletedTask}
+          onMaterialize={setSelectedTaskId}
         />
       )}
 

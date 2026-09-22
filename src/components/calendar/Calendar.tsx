@@ -1,5 +1,6 @@
 import { useRef, type TouchEvent } from "react";
 import { getMonthGrid, toDateKey } from "../../lib/date";
+import { getDisplayTasksForDate } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
 import DayCell from "./DayCell";
 
@@ -16,6 +17,7 @@ type Props = {
 
 export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth, compact = false }: Props) {
   const tasks = useAppStore((s) => s.tasks);
+  const routines = useAppStore((s) => s.routines);
   const categories = useAppStore((s) => s.categories);
   const dayMemos = useAppStore((s) => s.dayMemos);
   const touchStartX = useRef<number | null>(null);
@@ -62,7 +64,7 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
             );
           }
 
-          const dateTasks = tasks.filter((t) => t.date === dateKey);
+          const dateTasks = getDisplayTasksForDate(tasks, routines, dateKey);
           const doneCountByCategory = new Map<string, number>();
           for (const t of dateTasks) {
             if (!t.done) continue;

@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 import defaults from "../data/defaults.json";
-import type { AppData, Category, Task } from "../types";
+import { addDaysToKey } from "../lib/date";
+import type { AppData, Category, Routine, Task } from "../types";
 
 const STORAGE_KEY = "todo-app:v1";
 
@@ -15,6 +16,10 @@ type AppStore = AppData & {
   deleteTask: (id: string) => void;
   restoreTask: (task: Task) => void;
   setDayMemo: (date: string, text: string) => void;
+  materializeRoutineTask: (routineId: string, date: string) => string;
+  createRoutineFromTask: (taskId: string, rule: Routine["rule"], endDate?: string) => void;
+  deleteRoutineOccurrence: (routineId: string, date: string) => void;
+  endRoutineFrom: (routineId: string, date: string) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -53,7 +58,7 @@ const isFirstRun = localStorage.getItem(STORAGE_KEY) === null;
 
 export const useAppStore = create<AppStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...createDefaultState(),
       addCategory: (name, color) =>
         set((s) => ({
@@ -102,6 +107,63 @@ export const useAppStore = create<AppStore>()(
       setDayMemo: (date, text) =>
         set((s) => ({
           dayMemos: { ...s.dayMemos, [date]: text },
+        })),
+      materializeRoutineTask: (routineId, date) => {
+        const routine = get().routines.find((r) => r.id === routineId);
+        if (!routine) throw new Error(`routine not found: ${routineId}`);
+        const id = crypto.randomUUID();
+        set((s) => {
+          const order = s.tasks.filter((t) => t.categoryId === routine.categoryId && t.date === date).length;
+          return {
+            tasks: [
+              ...s.tasks,
+              {
+                id,
+                title: routine.title,
+                categoryId: routine.categoryId,
+                date,
+                done: false,
+                memo: "",
+                alarm: routine.alarm,
+                routineId: routine.id,
+                order,
+              },
+            ],
+          };
+        });
+        return id;
+      },
+      createRoutineFromTask: (taskId, rule, endDate) => {
+        const task = get().tasks.find((t) => t.id === taskId);
+        if (!task) return;
+        const routine: Routine = {
+          id: crypto.randomUUID(),
+          title: task.title,
+          categoryId: task.categoryId,
+          rule,
+          startDate: task.date,
+          endDate,
+          alarm: task.alarm,
+          skippedDates: [],
+        };
+        set((s) => ({
+          routines: [...s.routines, routine],
+          tasks: s.tasks.map((t) => (t.id === taskId ? { ...t, routineId: routine.id } : t)),
+        }));
+      },
+      deleteRoutineOccurrence: (routineId, date) =>
+        set((s) => ({
+          routines: s.routines.map((r) =>
+            r.id === routineId ? { ...r, skippedDates: [...r.skippedDates, date] } : r,
+          ),
+          tasks: s.tasks.filter((t) => !(t.routineId === routineId && t.date === date)),
+        })),
+      endRoutineFrom: (routineId, date) =>
+        set((s) => ({
+          routines: s.routines.map((r) =>
+            r.id === routineId ? { ...r, endDate: addDaysToKey(date, -1) } : r,
+          ),
+          tasks: s.tasks.filter((t) => !(t.routineId === routineId && t.date >= date)),
         })),
     }),
     {

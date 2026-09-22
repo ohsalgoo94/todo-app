@@ -1,4 +1,5 @@
 import { useState, type MouseEvent } from "react";
+import { isVirtualTaskId } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
 import type { Task } from "../../types";
 
@@ -9,12 +10,15 @@ type Props = {
 
 export default function TaskItem({ task, onOpen }: Props) {
   const toggleTaskDone = useAppStore((s) => s.toggleTaskDone);
+  const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const [pop, setPop] = useState(false);
 
   const handleToggle = (e: MouseEvent) => {
     e.stopPropagation();
     const willBeDone = !task.done;
-    toggleTaskDone(task.id);
+    // 루틴에서 계산된 가상 할 일은 체크하는 순간 실제 Task로 저장한다
+    const id = isVirtualTaskId(task.id) ? materializeRoutineTask(task.routineId!, task.date) : task.id;
+    toggleTaskDone(id);
     if (willBeDone) {
       setPop(true);
       setTimeout(() => setPop(false), 220);
@@ -50,10 +54,15 @@ export default function TaskItem({ task, onOpen }: Props) {
       </button>
       <div className="min-w-0 flex-1">
         <span
-          className={`block break-words text-sm ${
+          className={`flex items-center gap-1 break-words text-sm ${
             task.done ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-900 dark:text-gray-100"
           }`}
         >
+          {task.routineId && (
+            <span aria-label="루틴 할 일" className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
+              ↻
+            </span>
+          )}
           {task.title}
         </span>
         {task.memo.trim() && (
