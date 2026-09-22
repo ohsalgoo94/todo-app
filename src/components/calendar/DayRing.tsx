@@ -10,6 +10,7 @@ type Props = {
 
 export default function DayRing({ totalCount, segments }: Props) {
   const totalDone = segments.reduce((sum, s) => sum + s.count, 0);
+  const remainingCount = totalCount - totalDone;
 
   let backgroundImage: string | undefined;
   if (totalDone > 0) {
@@ -31,10 +32,10 @@ export default function DayRing({ totalCount, segments }: Props) {
     <div
       style={backgroundImage ? { backgroundImage } : undefined}
       className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium text-gray-600 dark:text-gray-200 ${
-        backgroundImage ? "" : "bg-gray-200 dark:bg-gray-700"
+        backgroundImage ? "" : "bg-white dark:bg-gray-800"
       }`}
     >
-      {totalCount}
+      {remainingCount}
     </div>
   );
 }
