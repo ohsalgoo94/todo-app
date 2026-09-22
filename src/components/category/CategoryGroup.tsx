@@ -10,23 +10,18 @@ type Props = {
   category: Category;
   date: string;
   onOpenTask: (taskId: string) => void;
-  // 드래그로 다른 카테고리 위에 올렸을 때, 놓기 전이라도 그 카테고리 목록에 미리 끼워 넣어 보여주기 위한 값
-  dragOverride?: { taskId: string; categoryId: string } | null;
 };
 
 export function categoryDroppableId(categoryId: string): string {
   return `category:${categoryId}`;
 }
 
-export default function CategoryGroup({ category, date, onOpenTask, dragOverride }: Props) {
+export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   // 셀렉터 안에서 .filter()로 매번 새 배열을 반환하면 zustand가 무한 렌더 루프에 빠지므로,
   // 원본 배열만 구독하고 필터링/루틴 계산은 렌더 본문에서 한다.
   const allTasks = useAppStore((s) => s.tasks);
   const routines = useAppStore((s) => s.routines);
-  const tasks = getDisplayTasksForDate(allTasks, routines, date).filter((t) => {
-    const effectiveCategoryId = dragOverride && t.id === dragOverride.taskId ? dragOverride.categoryId : t.categoryId;
-    return effectiveCategoryId === category.id;
-  });
+  const tasks = getDisplayTasksForDate(allTasks, routines, date).filter((t) => t.categoryId === category.id);
   const addTask = useAppStore((s) => s.addTask);
 
   const [isAdding, setIsAdding] = useState(false);

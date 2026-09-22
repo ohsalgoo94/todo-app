@@ -6,7 +6,6 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-  type DragOverEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { format, parseISO, startOfMonth } from "date-fns";
@@ -38,7 +37,6 @@ export default function App() {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
   const [activeDragTaskId, setActiveDragTaskId] = useState<string | null>(null);
-  const [dragOverride, setDragOverride] = useState<{ taskId: string; categoryId: string } | null>(null);
   const restoreTask = useAppStore((s) => s.restoreTask);
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const reorderTasksWithinCategory = useAppStore((s) => s.reorderTasksWithinCategory);
@@ -63,26 +61,8 @@ export default function App() {
     setActiveDragTaskId(String(event.active.id));
   };
 
-  // 다른 카테고리 위로 끌고 가면, 놓기 전이라도 그 카테고리 목록에 바로 끼워 넣어 보여준다
-  // (실제 저장은 안 하고 화면 표시만 바꿔서, 드래그 중 다른 항목들이 자연스럽게 애니메이션으로 자리를 비켜준다)
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) {
-      setDragOverride(null);
-      return;
-    }
-    const draggedTask = displayTasksForSelectedDate.find((t) => t.id === active.id);
-    const targetCategoryId = resolveTargetCategoryId(String(over.id));
-    if (!draggedTask || !targetCategoryId || targetCategoryId === draggedTask.categoryId) {
-      setDragOverride(null);
-      return;
-    }
-    setDragOverride({ taskId: String(active.id), categoryId: targetCategoryId });
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveDragTaskId(null);
-    setDragOverride(null);
 
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -188,20 +168,9 @@ export default function App() {
           <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
             {format(parseISO(selectedDate), "M월 d일 (EEE)", { locale: ko })}
           </p>
-          <DndContext
-            sensors={sensors}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-          >
+          <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             {categories.map((c) => (
-              <CategoryGroup
-                key={c.id}
-                category={c}
-                date={selectedDate}
-                onOpenTask={setSelectedTaskId}
-                dragOverride={dragOverride}
-              />
+              <CategoryGroup key={c.id} category={c} date={selectedDate} onOpenTask={setSelectedTaskId} />
             ))}
             <DragOverlay>
               {activeDragTask && (
