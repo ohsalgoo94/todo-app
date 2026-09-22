@@ -29,12 +29,7 @@ export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) 
         }`}
       >
         <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14Z"
-          />
-          <rect x="11" y="7" width="2" height="10" rx="1" />
+          <circle cx="12" cy="12" r="9" />
         </svg>
       </button>
     </nav>
