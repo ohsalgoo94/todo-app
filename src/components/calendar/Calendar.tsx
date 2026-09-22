@@ -15,6 +15,7 @@ type Props = {
 
 export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth }: Props) {
   const tasks = useAppStore((s) => s.tasks);
+  const categories = useAppStore((s) => s.categories);
   const touchStartX = useRef<number | null>(null);
 
   const days = getMonthGrid(viewedMonth);
@@ -44,6 +45,17 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
       <div className="grid grid-cols-7">
         {days.map((date) => {
           const dateKey = toDateKey(date);
+          const dateTasks = tasks.filter((t) => t.date === dateKey);
+
+          const doneCountByCategory = new Map<string, number>();
+          for (const t of dateTasks) {
+            if (!t.done) continue;
+            doneCountByCategory.set(t.categoryId, (doneCountByCategory.get(t.categoryId) ?? 0) + 1);
+          }
+          const segments = categories
+            .filter((c) => doneCountByCategory.has(c.id))
+            .map((c) => ({ color: c.color, count: doneCountByCategory.get(c.id)! }));
+
           return (
             <DayCell
               key={dateKey}
@@ -51,7 +63,8 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
               isCurrentMonth={date.getMonth() === viewedMonth.getMonth()}
               isToday={dateKey === todayKey}
               isSelected={dateKey === selectedDate}
-              taskCount={tasks.filter((t) => t.date === dateKey).length}
+              totalCount={dateTasks.length}
+              segments={segments}
               onSelect={() => onSelectDate(dateKey)}
             />
           );

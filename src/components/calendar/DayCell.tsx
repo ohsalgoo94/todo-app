@@ -1,16 +1,25 @@
 import { format } from "date-fns";
-import DayRing from "./DayRing";
+import DayRing, { type CategorySegment } from "./DayRing";
 
 type Props = {
   date: Date;
   isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
-  taskCount: number;
+  totalCount: number;
+  segments: CategorySegment[];
   onSelect: () => void;
 };
 
-export default function DayCell({ date, isCurrentMonth, isToday, isSelected, taskCount, onSelect }: Props) {
+export default function DayCell({
+  date,
+  isCurrentMonth,
+  isToday,
+  isSelected,
+  totalCount,
+  segments,
+  onSelect,
+}: Props) {
   return (
     <button
       type="button"
@@ -30,7 +39,7 @@ export default function DayCell({ date, isCurrentMonth, isToday, isSelected, tas
       >
         {format(date, "d")}
       </span>
-      <DayRing count={taskCount} />
+      <DayRing totalCount={totalCount} segments={segments} />
     </button>
   );
 }
