@@ -24,13 +24,18 @@ export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) 
         onClick={onOpenPay}
         aria-label="알바 월급 계산기"
         aria-pressed={activeScreen === "pay"}
-        className="flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800"
+        className={`flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 ${
+          activeScreen === "pay" ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-600"
+        }`}
       >
-        {activeScreen === "pay" ? (
-          <img src="/icons/piggy-active.png" alt="" className="h-6 w-auto animate-coin-drop" />
-        ) : (
-          <img src="/icons/piggy-idle.png" alt="" className="h-6 w-auto dark:invert" />
-        )}
+        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14Z"
+          />
+          <rect x="11" y="7" width="2" height="10" rx="1" />
+        </svg>
       </button>
     </nav>
   );
