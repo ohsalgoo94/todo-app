@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useAppStore } from "../../store/useAppStore";
 import type { Task } from "../../types";
 
 type Props = {
   task: Task;
+  onOpen: () => void;
 };
 
-export default function TaskItem({ task }: Props) {
+export default function TaskItem({ task, onOpen }: Props) {
   const toggleTaskDone = useAppStore((s) => s.toggleTaskDone);
   const [pop, setPop] = useState(false);
 
-  const handleToggle = () => {
+  const handleToggle = (e: MouseEvent) => {
+    e.stopPropagation();
     const willBeDone = !task.done;
     toggleTaskDone(task.id);
     if (willBeDone) {
@@ -20,7 +22,15 @@ export default function TaskItem({ task }: Props) {
   };
 
   return (
-    <div className="flex items-center gap-2 py-1">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") onOpen();
+      }}
+      className="flex items-center gap-2 py-1"
+    >
       <button
         type="button"
         onClick={handleToggle}

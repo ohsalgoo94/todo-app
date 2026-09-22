@@ -6,9 +6,10 @@ import type { Category } from "../../types";
 type Props = {
   category: Category;
   date: string;
+  onOpenTask: (taskId: string) => void;
 };
 
-export default function CategoryGroup({ category, date }: Props) {
+export default function CategoryGroup({ category, date, onOpenTask }: Props) {
   // 셀렉터 안에서 .filter()로 매번 새 배열을 반환하면 zustand가 무한 렌더 루프에 빠지므로,
   // 원본 배열만 구독하고 필터링은 렌더 본문에서 한다.
   const allTasks = useAppStore((s) => s.tasks);
@@ -56,7 +57,7 @@ export default function CategoryGroup({ category, date }: Props) {
       {!category.collapsed && (
         <div className="ml-8 space-y-1">
           {tasks.map((t) => (
-            <TaskItem key={t.id} task={t} />
+            <TaskItem key={t.id} task={t} onOpen={() => onOpenTask(t.id)} />
           ))}
           {isAdding && (
             <input

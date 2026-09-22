@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 import defaults from "../data/defaults.json";
-import type { AppData, Category } from "../types";
+import type { AppData, Category, Task } from "../types";
 
 const STORAGE_KEY = "todo-app:v1";
 
@@ -11,6 +11,9 @@ type AppStore = AppData & {
   deleteCategory: (id: string) => void;
   addTask: (categoryId: string, date: string, title: string) => void;
   toggleTaskDone: (id: string) => void;
+  updateTask: (id: string, patch: Partial<Pick<Task, "title" | "memo" | "date">>) => void;
+  deleteTask: (id: string) => void;
+  restoreTask: (task: Task) => void;
   setDayMemo: (date: string, text: string) => void;
 };
 
@@ -83,6 +86,18 @@ export const useAppStore = create<AppStore>()(
           tasks: s.tasks.map((t) =>
             t.id === id ? { ...t, done: !t.done, doneAt: !t.done ? new Date().toISOString() : undefined } : t,
           ),
+        })),
+      updateTask: (id, patch) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)),
+        })),
+      deleteTask: (id) =>
+        set((s) => ({
+          tasks: s.tasks.filter((t) => t.id !== id),
+        })),
+      restoreTask: (task) =>
+        set((s) => ({
+          tasks: [...s.tasks, task],
         })),
       setDayMemo: (date, text) =>
         set((s) => ({
