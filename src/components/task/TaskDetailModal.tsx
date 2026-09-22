@@ -1,4 +1,4 @@
-import { addDays, format, parseISO } from "date-fns";
+import { addDays, parseISO } from "date-fns";
 import { useState } from "react";
 import { toDateKey } from "../../lib/date";
 import { useAppStore } from "../../store/useAppStore";
@@ -46,7 +46,7 @@ export default function TaskDetailModal({ task, onClose, onDeleted }: Props) {
         onClick={onClose}
       >
         <div
-          className="flex h-[66dvh] w-full max-w-[420px] flex-col overflow-y-auto rounded-3xl bg-white p-5 dark:bg-gray-900"
+          className="flex max-h-[66dvh] w-full max-w-[420px] flex-col overflow-y-auto rounded-3xl bg-white p-5 dark:bg-gray-900"
           onClick={(e) => e.stopPropagation()}
         >
           {isEditingTitle ? (
@@ -87,31 +87,29 @@ export default function TaskDetailModal({ task, onClose, onDeleted }: Props) {
             </button>
           </div>
 
-          <label className="mb-1 w-4/5 self-center text-xs font-medium text-gray-400 dark:text-gray-500">
-            메모
-          </label>
+          <label className="mb-1 text-xs font-medium text-gray-400 dark:text-gray-500">메모</label>
           <textarea
             value={task.memo}
             onChange={(e) => updateTask(task.id, { memo: e.target.value })}
             rows={3}
             placeholder="메모 입력"
-            className="mb-4 w-4/5 self-center resize-none rounded-2xl border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+            className="mb-4 w-full resize-none rounded-2xl border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           />
 
-          <div className="mt-auto flex flex-col items-center gap-2">
+          <div className="flex flex-col gap-2">
             <button
               type="button"
               onClick={handleShiftDay}
-              className="w-4/5 rounded-full bg-gray-100 py-2.5 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+              className="w-full rounded-full bg-gray-100 py-2.5 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
             >
               {isPast ? "오늘 하기" : "내일 하기"}
             </button>
             <button
               type="button"
               onClick={() => setIsDatePickerOpen(true)}
-              className="w-4/5 rounded-full bg-gray-100 py-2.5 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+              className="w-full rounded-full bg-gray-100 py-2.5 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200"
             >
-              날짜 바꾸기 ({format(parseISO(task.date), "M월 d일")})
+              날짜 바꾸기
             </button>
           </div>
         </div>
