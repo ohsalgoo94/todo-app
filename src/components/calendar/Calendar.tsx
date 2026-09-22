@@ -16,6 +16,7 @@ type Props = {
 export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth }: Props) {
   const tasks = useAppStore((s) => s.tasks);
   const categories = useAppStore((s) => s.categories);
+  const dayMemos = useAppStore((s) => s.dayMemos);
   const touchStartX = useRef<number | null>(null);
 
   const days = getMonthGrid(viewedMonth);
@@ -65,6 +66,7 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
               isSelected={dateKey === selectedDate}
               totalCount={dateTasks.length}
               segments={segments}
+              hasMemo={Boolean(dayMemos[dateKey]?.trim())}
               onSelect={() => onSelectDate(dateKey)}
             />
           );

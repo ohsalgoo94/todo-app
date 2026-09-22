@@ -5,6 +5,7 @@ import Calendar from "./components/calendar/Calendar";
 import CategoryGroup from "./components/category/CategoryGroup";
 import CategoryMenu from "./components/category/CategoryMenu";
 import BottomBar from "./components/layout/BottomBar";
+import DayMemo from "./components/memo/DayMemo";
 import { shiftMonth, toDateKey } from "./lib/date";
 import { useAppStore } from "./store/useAppStore";
 
@@ -61,6 +62,7 @@ export default function App() {
       <CategoryMenu isOpen={isCategoryMenuOpen} onClose={() => setIsCategoryMenuOpen(false)} />
 
       <main className="flex-1 overflow-y-auto px-2 pb-4">
+        <DayMemo date={selectedDate} />
         <Calendar
           viewedMonth={viewedMonth}
           selectedDate={selectedDate}

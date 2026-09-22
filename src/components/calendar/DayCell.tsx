@@ -8,6 +8,7 @@ type Props = {
   isSelected: boolean;
   totalCount: number;
   segments: CategorySegment[];
+  hasMemo: boolean;
   onSelect: () => void;
 };
 
@@ -18,6 +19,7 @@ export default function DayCell({
   isSelected,
   totalCount,
   segments,
+  hasMemo,
   onSelect,
 }: Props) {
   return (
@@ -27,7 +29,7 @@ export default function DayCell({
       className="flex flex-col items-center gap-1 py-2"
     >
       <span
-        className={`flex h-7 w-7 items-center justify-center rounded-full text-sm ${
+        className={`relative flex h-7 w-7 items-center justify-center rounded-full text-sm ${
           isSelected
             ? "bg-rose-500 font-semibold text-white"
             : isToday
@@ -38,6 +40,7 @@ export default function DayCell({
         }`}
       >
         {format(date, "d")}
+        {hasMemo && <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-sky-400" />}
       </span>
       <DayRing totalCount={totalCount} segments={segments} />
     </button>

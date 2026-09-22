@@ -11,6 +11,7 @@ type AppStore = AppData & {
   deleteCategory: (id: string) => void;
   addTask: (categoryId: string, date: string, title: string) => void;
   toggleTaskDone: (id: string) => void;
+  setDayMemo: (date: string, text: string) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -82,6 +83,10 @@ export const useAppStore = create<AppStore>()(
           tasks: s.tasks.map((t) =>
             t.id === id ? { ...t, done: !t.done, doneAt: !t.done ? new Date().toISOString() : undefined } : t,
           ),
+        })),
+      setDayMemo: (date, text) =>
+        set((s) => ({
+          dayMemos: { ...s.dayMemos, [date]: text },
         })),
     }),
     {
