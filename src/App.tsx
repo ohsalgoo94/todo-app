@@ -1,14 +1,19 @@
-import { format, startOfMonth } from "date-fns";
+import { format, parseISO, startOfMonth } from "date-fns";
+import { ko } from "date-fns/locale";
 import { useState } from "react";
 import Calendar from "./components/calendar/Calendar";
+import CategoryGroup from "./components/category/CategoryGroup";
 import CategoryMenu from "./components/category/CategoryMenu";
 import BottomBar from "./components/layout/BottomBar";
 import { shiftMonth, toDateKey } from "./lib/date";
+import { useAppStore } from "./store/useAppStore";
 
 export default function App() {
+  const categories = useAppStore((s) => s.categories);
   const [viewedMonth, setViewedMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
+  const taskCountOnSelectedDate = useAppStore((s) => s.tasks.filter((t) => t.date === selectedDate).length);
 
   const handleShiftMonth = (delta: number) => setViewedMonth((m) => shiftMonth(m, delta));
 
@@ -62,9 +67,19 @@ export default function App() {
           onSelectDate={setSelectedDate}
           onShiftMonth={handleShiftMonth}
         />
-        <p className="px-2 pt-4 text-sm text-gray-500 dark:text-gray-400">
-          선택한 날짜: {selectedDate} (할 일 목록은 5단계에서 채워집니다)
-        </p>
+        <div className="px-2 pt-4">
+          <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+            {format(parseISO(selectedDate), "M월 d일 (EEE)", { locale: ko })}
+          </p>
+          {categories.map((c) => (
+            <CategoryGroup key={c.id} category={c} date={selectedDate} />
+          ))}
+          {taskCountOnSelectedDate === 0 && (
+            <p className="px-2 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
+              카테고리 옆 +를 눌러 할 일을 추가해보세요
+            </p>
+          )}
+        </div>
       </main>
 
       <BottomBar onGoToday={handleGoToday} />

@@ -7,8 +7,10 @@ const STORAGE_KEY = "todo-app:v1";
 
 type AppStore = AppData & {
   addCategory: (name: string, color: string) => void;
-  updateCategory: (id: string, patch: Partial<Pick<Category, "name" | "color">>) => void;
+  updateCategory: (id: string, patch: Partial<Pick<Category, "name" | "color" | "collapsed">>) => void;
   deleteCategory: (id: string) => void;
+  addTask: (categoryId: string, date: string, title: string) => void;
+  toggleTaskDone: (id: string) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -64,6 +66,22 @@ export const useAppStore = create<AppStore>()(
         set((s) => ({
           categories: s.categories.filter((c) => c.id !== id),
           tasks: s.tasks.filter((t) => t.categoryId !== id),
+        })),
+      addTask: (categoryId, date, title) =>
+        set((s) => {
+          const order = s.tasks.filter((t) => t.categoryId === categoryId && t.date === date).length;
+          return {
+            tasks: [
+              ...s.tasks,
+              { id: crypto.randomUUID(), title, categoryId, date, done: false, memo: "", alarm: null, order },
+            ],
+          };
+        }),
+      toggleTaskDone: (id) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) =>
+            t.id === id ? { ...t, done: !t.done, doneAt: !t.done ? new Date().toISOString() : undefined } : t,
+          ),
         })),
     }),
     {

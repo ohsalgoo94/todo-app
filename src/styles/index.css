@@ -13,3 +13,19 @@ body,
 body {
   font-family: var(--font-sans);
 }
+
+@keyframes check-pop {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-check-pop {
+  animation: check-pop 220ms ease-out;
+}
