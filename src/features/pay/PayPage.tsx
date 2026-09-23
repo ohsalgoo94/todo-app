@@ -2,11 +2,14 @@ import { format, startOfMonth } from "date-fns";
 import { useState } from "react";
 import { shiftMonth } from "../../lib/date";
 import PayCalendar from "./components/PayCalendar";
+import PaySummaryCard from "./components/PaySummaryCard";
 import WorkTimePicker from "./components/WorkTimePicker";
+import { calcMonthlyPay } from "./lib/calcPay";
 import { usePayStore } from "./store/usePayStore";
 
 export default function PayPage() {
   const records = usePayStore((s) => s.records);
+  const options = usePayStore((s) => s.options);
   const setWorkRecord = usePayStore((s) => s.setWorkRecord);
   const deleteWorkRecord = usePayStore((s) => s.deleteWorkRecord);
 
@@ -15,6 +18,8 @@ export default function PayPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const handleShiftMonth = (delta: number) => setViewedMonth((m) => shiftMonth(m, delta));
+
+  const result = calcMonthlyPay(records, viewedMonth.getFullYear(), viewedMonth.getMonth() + 1, options);
 
   return (
     <main className="flex-1 overflow-y-auto px-2 pb-4">
@@ -44,6 +49,8 @@ export default function PayPage() {
         onSelectDate={setSelectedDate}
         onShiftMonth={handleShiftMonth}
       />
+
+      <PaySummaryCard result={result} />
 
       {selectedDate && (
         <WorkTimePicker
