@@ -14,9 +14,18 @@ type Props = {
   onSelectDate: (dateKey: string) => void;
   onShiftMonth: (delta: number) => void;
   compact?: boolean;
+  // 넓은 화면에서 남는 세로 공간을 캘린더가 꽉 채우게 할지 (App.tsx의 메인 캘린더에서만 켠다)
+  fillHeight?: boolean;
 };
 
-export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth, compact = false }: Props) {
+export default function Calendar({
+  viewedMonth,
+  selectedDate,
+  onSelectDate,
+  onShiftMonth,
+  compact = false,
+  fillHeight = false,
+}: Props) {
   const tasks = useAppStore((s) => s.tasks);
   const routines = useAppStore((s) => s.routines);
   const categories = useAppStore((s) => s.categories);
@@ -39,7 +48,11 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
   };
 
   return (
-    <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className={fillHeight ? "lg:flex lg:h-full lg:min-h-0 lg:flex-col" : ""}
+    >
       <div className="grid grid-cols-7 text-center text-xs text-gray-400 dark:text-gray-500">
         {WEEKDAYS.map((w) => (
           <div key={w} className="py-1">
@@ -47,7 +60,7 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7">
+      <div className={`grid grid-cols-7 ${fillHeight ? "lg:min-h-0 lg:flex-1 lg:auto-rows-fr" : ""}`}>
         {days.map((date) => {
           const dateKey = toDateKey(date);
           const isCurrentMonth = date.getMonth() === viewedMonth.getMonth();
@@ -93,6 +106,7 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
               totalCount={dateTasks.length}
               segments={segments}
               hasMemo={Boolean(dayMemos[dateKey]?.trim())}
+              fillHeight={fillHeight}
               onSelect={() => onSelectDate(dateKey)}
             />
           );

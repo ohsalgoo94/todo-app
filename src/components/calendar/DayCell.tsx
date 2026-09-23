@@ -9,6 +9,7 @@ type Props = {
   segments?: CategorySegment[];
   hasMemo?: boolean;
   compact?: boolean;
+  fillHeight?: boolean;
   onSelect: () => void;
 };
 
@@ -20,13 +21,14 @@ export default function DayCell({
   segments = [],
   hasMemo = false,
   compact = false,
+  fillHeight = false,
   onSelect,
 }: Props) {
   return (
     <button
       type="button"
       onClick={onSelect}
-      className="flex flex-col items-center gap-1 py-2"
+      className={`flex flex-col items-center justify-center gap-1 py-2 ${fillHeight ? "lg:h-full" : ""}`}
     >
       <span
         className={`relative flex h-7 w-7 items-center justify-center rounded-full text-sm ${

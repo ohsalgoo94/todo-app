@@ -24,7 +24,7 @@ export default function DayMemo({ date }: Props) {
         onChange={(e) => setDraft(e.target.value)}
         rows={2}
         placeholder="이 날의 메모"
-        className="w-full resize-none rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        className="w-full resize-none rounded-2xl border border-gray-200 px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 lg:min-h-[140px]"
       />
       <div className="mt-1 flex justify-end">
         <button

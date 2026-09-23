@@ -36,3 +36,14 @@ body {
 .animate-check-pop {
   animation: check-pop 220ms ease-out;
 }
+
+/* 넓은 화면(2단 레이아웃)에서만 스크롤은 되지만 스크롤바는 안 보이게 한다 */
+@media (min-width: 1024px) {
+  .lg-scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .lg-scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
