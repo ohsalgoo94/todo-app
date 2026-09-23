@@ -75,14 +75,19 @@ export default function WorkTimePicker({
   const [endHour, setEndHour] = useState(initialMinutes !== null ? Math.floor(initialMinutes / 60) % 24 : 0);
   const [endMinute, setEndMinute] = useState(initialMinutes !== null ? initialMinutes % 60 : 0);
 
-  const [nightHour, setNightHour] = useState(Math.floor(initialNightMinutes / 60));
-  const [nightMinute, setNightMinute] = useState(initialNightMinutes % 60);
+  // 야간 시간도 (분량이 아니라) 시작~종료 시각으로 입력받아 계산한다
+  const [nightStartHour, setNightStartHour] = useState(0);
+  const [nightStartMinute, setNightStartMinute] = useState(0);
+  const [nightEndHour, setNightEndHour] = useState(Math.floor(initialNightMinutes / 60) % 24);
+  const [nightEndMinute, setNightEndMinute] = useState(initialNightMinutes % 60);
 
   const startTotal = startHour * 60 + startMinute;
   const endTotal = endHour * 60 + endMinute;
   const duration = ((endTotal - startTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
 
-  const nightDuration = nightHour * 60 + nightMinute;
+  const nightStartTotal = nightStartHour * 60 + nightStartMinute;
+  const nightEndTotal = nightEndHour * 60 + nightEndMinute;
+  const nightDuration = ((nightEndTotal - nightStartTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
   const nightExceeds = nightPayEnabled && nightDuration > duration;
 
   const handleDone = () => {
@@ -123,16 +128,27 @@ export default function WorkTimePicker({
         </p>
 
         {nightPayEnabled && (
-          <div className="mb-4">
+          <div className="mb-4 space-y-3">
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-500">그중 야간 근무 (22시~06시)</p>
             <TimeSelect
-              label="그중 야간 근무 (22시~06시)"
-              hour={nightHour}
-              minute={nightMinute}
-              onHourChange={setNightHour}
-              onMinuteChange={setNightMinute}
+              label="야간 시작"
+              hour={nightStartHour}
+              minute={nightStartMinute}
+              onHourChange={setNightStartHour}
+              onMinuteChange={setNightStartMinute}
             />
+            <TimeSelect
+              label="야간 종료"
+              hour={nightEndHour}
+              minute={nightEndMinute}
+              onHourChange={setNightEndHour}
+              onMinuteChange={setNightEndMinute}
+            />
+            <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+              야간 근무: <span className="font-semibold">{Math.floor(nightDuration / 60)}시간 {nightDuration % 60}분</span>
+            </p>
             {nightExceeds && (
-              <p className="mt-1 text-xs text-rose-500">야간 시간은 총 근무 시간보다 길 수 없어요.</p>
+              <p className="text-xs text-rose-500">야간 시간은 총 근무 시간보다 길 수 없어요.</p>
             )}
           </div>
         )}
