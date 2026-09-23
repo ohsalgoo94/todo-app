@@ -25,11 +25,51 @@ export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) 
         aria-label="알바 월급 계산기"
         aria-pressed={activeScreen === "pay"}
         className={`flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 ${
-          activeScreen === "pay" ? "opacity-100" : "opacity-40"
+          activeScreen === "pay" ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-600"
         }`}
       >
-        <img src="/icons/coin.png" alt="" className="h-6 w-auto" />
+        {activeScreen === "pay" ? <PiggyCoinIcon /> : <PiggyIcon />}
       </button>
     </nav>
+  );
+}
+
+function PiggyIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-6 w-6"
+    >
+      <ellipse cx="12" cy="13.5" rx="7.5" ry="5.5" />
+      <path d="M17.5 12.5c1-.3 2-1 2.5-2-.7 0-1.5.2-2 .5" />
+      <circle cx="9" cy="13" r="0.9" fill="currentColor" stroke="none" />
+      <path d="M6 18v1.5M17 18v1.5" />
+      <path d="M8.5 8c1-1 2.2-1.5 3.5-1.5s2.5.5 3.5 1.5" />
+    </svg>
+  );
+}
+
+function PiggyCoinIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-6 w-6"
+    >
+      <ellipse cx="12" cy="13.5" rx="7.5" ry="5.5" />
+      <path d="M17.5 12.5c1-.3 2-1 2.5-2-.7 0-1.5.2-2 .5" />
+      <circle cx="9" cy="13" r="0.9" fill="currentColor" stroke="none" />
+      <path d="M6 18v1.5M17 18v1.5" />
+      <ellipse cx="11.5" cy="7" rx="2" ry="1" fill="currentColor" stroke="none" />
+    </svg>
   );
 }
