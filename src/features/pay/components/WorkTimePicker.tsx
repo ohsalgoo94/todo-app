@@ -1,8 +1,6 @@
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
 
-const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => i);
-const MINUTE_OPTIONS = Array.from({ length: 12 }, (_, i) => i * 5);
 const MINUTES_PER_DAY = 24 * 60;
 
 type Props = {
@@ -15,46 +13,37 @@ type Props = {
   onClose: () => void;
 };
 
-function TimeSelect({
+function minutesToHHMM(totalMinutes: number): string {
+  const normalized = ((totalMinutes % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  const h = Math.floor(normalized / 60);
+  const m = normalized % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+function hhmmToMinutes(value: string): number {
+  const [h, m] = value.split(":").map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+
+function TimeInput({
   label,
-  hour,
-  minute,
-  onHourChange,
-  onMinuteChange,
+  value,
+  onChange,
 }: {
   label: string;
-  hour: number;
-  minute: number;
-  onHourChange: (h: number) => void;
-  onMinuteChange: (m: number) => void;
+  value: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <div>
       <label className="mb-1 block text-xs font-medium text-gray-400 dark:text-gray-500">{label}</label>
-      <div className="flex items-center gap-2">
-        <select
-          value={hour}
-          onChange={(e) => onHourChange(Number(e.target.value))}
-          className="flex-1 rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-        >
-          {HOUR_OPTIONS.map((h) => (
-            <option key={h} value={h}>
-              {String(h).padStart(2, "0")}시
-            </option>
-          ))}
-        </select>
-        <select
-          value={minute}
-          onChange={(e) => onMinuteChange(Number(e.target.value))}
-          className="flex-1 rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-        >
-          {MINUTE_OPTIONS.map((m) => (
-            <option key={m} value={m}>
-              {String(m).padStart(2, "0")}분
-            </option>
-          ))}
-        </select>
-      </div>
+      <input
+        type="time"
+        step={300}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+      />
     </div>
   );
 }
@@ -70,24 +59,16 @@ export default function WorkTimePicker({
 }: Props) {
   // 저장된 데이터는 근무 시간(분)만 갖고 있어서, 기존 기록을 편집할 땐 00:00을 시작으로 두고
   // 그만큼 지난 시각을 종료로 잡아 같은 근무 시간이 되게 한다.
-  const [startHour, setStartHour] = useState(0);
-  const [startMinute, setStartMinute] = useState(0);
-  const [endHour, setEndHour] = useState(initialMinutes !== null ? Math.floor(initialMinutes / 60) % 24 : 0);
-  const [endMinute, setEndMinute] = useState(initialMinutes !== null ? initialMinutes % 60 : 0);
+  const [startTime, setStartTime] = useState("00:00");
+  const [endTime, setEndTime] = useState(() => (initialMinutes !== null ? minutesToHHMM(initialMinutes) : "00:00"));
 
   // 야간 시간도 (분량이 아니라) 시작~종료 시각으로 입력받아 계산한다
-  const [nightStartHour, setNightStartHour] = useState(0);
-  const [nightStartMinute, setNightStartMinute] = useState(0);
-  const [nightEndHour, setNightEndHour] = useState(Math.floor(initialNightMinutes / 60) % 24);
-  const [nightEndMinute, setNightEndMinute] = useState(initialNightMinutes % 60);
+  const [nightStartTime, setNightStartTime] = useState("00:00");
+  const [nightEndTime, setNightEndTime] = useState(() => minutesToHHMM(initialNightMinutes));
 
-  const startTotal = startHour * 60 + startMinute;
-  const endTotal = endHour * 60 + endMinute;
-  const duration = ((endTotal - startTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
-
-  const nightStartTotal = nightStartHour * 60 + nightStartMinute;
-  const nightEndTotal = nightEndHour * 60 + nightEndMinute;
-  const nightDuration = ((nightEndTotal - nightStartTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  const duration = ((hhmmToMinutes(endTime) - hhmmToMinutes(startTime)) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  const nightDuration =
+    ((hhmmToMinutes(nightEndTime) - hhmmToMinutes(nightStartTime)) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
   const nightExceeds = nightPayEnabled && nightDuration > duration;
 
   const handleDone = () => {
@@ -107,20 +88,8 @@ export default function WorkTimePicker({
         </h3>
 
         <div className="mb-4 space-y-3">
-          <TimeSelect
-            label="시작 시간"
-            hour={startHour}
-            minute={startMinute}
-            onHourChange={setStartHour}
-            onMinuteChange={setStartMinute}
-          />
-          <TimeSelect
-            label="종료 시간"
-            hour={endHour}
-            minute={endMinute}
-            onHourChange={setEndHour}
-            onMinuteChange={setEndMinute}
-          />
+          <TimeInput label="시작 시간" value={startTime} onChange={setStartTime} />
+          <TimeInput label="종료 시간" value={endTime} onChange={setEndTime} />
         </div>
 
         <p className="mb-4 text-center text-sm text-gray-600 dark:text-gray-300">
@@ -130,20 +99,8 @@ export default function WorkTimePicker({
         {nightPayEnabled && (
           <div className="mb-4 space-y-3">
             <p className="text-xs font-medium text-gray-400 dark:text-gray-500">그중 야간 근무 (22시~06시)</p>
-            <TimeSelect
-              label="야간 시작"
-              hour={nightStartHour}
-              minute={nightStartMinute}
-              onHourChange={setNightStartHour}
-              onMinuteChange={setNightStartMinute}
-            />
-            <TimeSelect
-              label="야간 종료"
-              hour={nightEndHour}
-              minute={nightEndMinute}
-              onHourChange={setNightEndHour}
-              onMinuteChange={setNightEndMinute}
-            />
+            <TimeInput label="야간 시작" value={nightStartTime} onChange={setNightStartTime} />
+            <TimeInput label="야간 종료" value={nightEndTime} onChange={setNightEndTime} />
             <p className="text-center text-sm text-gray-600 dark:text-gray-300">
               야간 근무: <span className="font-semibold">{Math.floor(nightDuration / 60)}시간 {nightDuration % 60}분</span>
             </p>
