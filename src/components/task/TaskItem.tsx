@@ -34,6 +34,9 @@ export default function TaskItem({ task, category, onOpen }: Props) {
   // 체크박스는 드래그 시작 대상에서 제외 (pointerdown이 위 row의 드래그 리스너로 버블링되지 않게)
   const stopPointerDown = (e: PointerEvent) => e.stopPropagation();
 
+  // memo 카테고리는 완료해도 글자색·취소선 등 완료 스타일을 적용하지 않는다
+  const showDoneStyle = task.done && !isMemoCategory(category.name);
+
   return (
     <div
       ref={setNodeRef}
@@ -67,9 +70,7 @@ export default function TaskItem({ task, category, onOpen }: Props) {
       <div className="min-w-0 flex-1">
         <span
           className={`block break-words text-sm ${
-            task.done
-              ? `text-gray-400 dark:text-gray-500 ${isMemoCategory(category.name) ? "" : "line-through"}`
-              : "text-gray-900 dark:text-gray-100"
+            showDoneStyle ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-900 dark:text-gray-100"
           }`}
         >
           {task.title}
