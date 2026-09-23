@@ -1,16 +1,17 @@
 type Props = {
-  activeScreen: "todo" | "pay";
+  activeScreen: "todo" | "pay" | "settings";
   onGoHome: () => void;
   onOpenPay: () => void;
+  onOpenSettings: () => void;
 };
 
-export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) {
+export default function BottomBar({ activeScreen, onGoHome, onOpenPay, onOpenSettings }: Props) {
   return (
     <nav className="flex items-center justify-center gap-8 border-t border-gray-200 bg-white py-2 dark:border-gray-800 dark:bg-gray-950">
       <button
         type="button"
         onClick={onGoHome}
-        aria-label={activeScreen === "pay" ? "TO-DO로 돌아가기" : "오늘로 이동"}
+        aria-label={activeScreen === "todo" ? "오늘로 이동" : "TO-DO로 돌아가기"}
         className={`flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 ${
           activeScreen === "todo" ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-600"
         }`}
@@ -29,6 +30,19 @@ export default function BottomBar({ activeScreen, onGoHome, onOpenPay }: Props) 
         }`}
       >
         {activeScreen === "pay" ? <PiggyCoinIcon /> : <PiggyIcon />}
+      </button>
+      <button
+        type="button"
+        onClick={onOpenSettings}
+        aria-label="설정"
+        aria-pressed={activeScreen === "settings"}
+        className={`flex h-11 w-11 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 ${
+          activeScreen === "settings" ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-600"
+        }`}
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+          <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9.4 4c0-.4 0-.8-.1-1.2l2-1.6-2-3.4-2.4.9a7.6 7.6 0 0 0-2-1.2L16.5 3h-4l-.4 2.5a7.6 7.6 0 0 0-2 1.2l-2.4-.9-2 3.4 2 1.6c-.1.4-.1.8-.1 1.2s0 .8.1 1.2l-2 1.6 2 3.4 2.4-.9c.6.5 1.3.9 2 1.2L12.5 21h4l.4-2.5c.7-.3 1.4-.7 2-1.2l2.4.9 2-3.4-2-1.6c.1-.4.1-.8.1-1.2Z" />
+        </svg>
       </button>
     </nav>
   );

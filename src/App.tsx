@@ -16,6 +16,7 @@ import CategoryGroup from "./components/category/CategoryGroup";
 import CategoryMenu from "./components/category/CategoryMenu";
 import BottomBar from "./components/layout/BottomBar";
 import DayMemo from "./components/memo/DayMemo";
+import SettingsPage from "./components/settings/SettingsPage";
 import TaskDetailModal from "./components/task/TaskDetailModal";
 import PayErrorBoundary from "./features/pay/PayErrorBoundary";
 import { shiftMonth, toDateKey } from "./lib/date";
@@ -37,7 +38,7 @@ export default function App() {
   const [viewedMonth, setViewedMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
-  const [screen, setScreen] = useState<"todo" | "pay">("todo");
+  const [screen, setScreen] = useState<"todo" | "pay" | "settings">("todo");
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
   const [activeDragTaskId, setActiveDragTaskId] = useState<string | null>(null);
@@ -116,9 +117,9 @@ export default function App() {
     setSelectedDate(toDateKey(new Date()));
   };
 
-  // TO-DO 화면에서는 오늘로 이동, 계산기 화면에서는 TO-DO로 돌아가기 (보던 월/날짜는 그대로 유지됨)
+  // TO-DO 화면에서는 오늘로 이동, 다른 화면(계산기/설정)에서는 TO-DO로 돌아가기 (보던 월/날짜는 그대로 유지됨)
   const handleGoHome = () => {
-    if (screen === "pay") {
+    if (screen !== "todo") {
       setScreen("todo");
     } else {
       handleGoToday();
@@ -233,7 +234,7 @@ export default function App() {
             </div>
           )}
         </>
-      ) : (
+      ) : screen === "pay" ? (
         <PayErrorBoundary>
           <Suspense
             fallback={
@@ -245,9 +246,16 @@ export default function App() {
             <PayPage />
           </Suspense>
         </PayErrorBoundary>
+      ) : (
+        <SettingsPage />
       )}
 
-      <BottomBar activeScreen={screen} onGoHome={handleGoHome} onOpenPay={() => setScreen("pay")} />
+      <BottomBar
+        activeScreen={screen}
+        onGoHome={handleGoHome}
+        onOpenPay={() => setScreen("pay")}
+        onOpenSettings={() => setScreen("settings")}
+      />
     </div>
   );
 }

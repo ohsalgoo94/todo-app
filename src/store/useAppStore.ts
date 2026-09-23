@@ -23,6 +23,7 @@ type AppStore = AppData & {
   reorderTasksWithinCategory: (categoryId: string, date: string, orderedTaskIds: string[]) => void;
   moveTaskToCategory: (taskId: string, categoryId: string) => void;
   reorderCategories: (orderedCategoryIds: string[]) => void;
+  restoreFromBackup: (data: AppData) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -191,6 +192,7 @@ export const useAppStore = create<AppStore>()(
             return newOrder === -1 ? c : { ...c, order: newOrder };
           }),
         })),
+      restoreFromBackup: (data) => set(() => ({ ...data })),
     }),
     {
       name: STORAGE_KEY,
