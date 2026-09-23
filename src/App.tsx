@@ -132,7 +132,7 @@ export default function App() {
   };
 
   return (
-    <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-gray-50 dark:bg-gray-900 lg:mx-0 lg:max-w-none lg:px-[15px]">
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-white dark:bg-gray-900 lg:max-w-[1200px] lg:px-[15px]">
       {screen === "todo" ? (
         <>
           <header className="flex items-center justify-between px-4 py-3">

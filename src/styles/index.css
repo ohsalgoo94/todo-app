@@ -12,6 +12,13 @@ body,
 
 body {
   font-family: var(--font-sans);
+  background-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+  }
 }
 
 @keyframes check-pop {
