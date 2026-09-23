@@ -1,16 +1,18 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState, type MouseEvent, type PointerEvent } from "react";
+import { isMemoCategory } from "../../lib/category";
 import { isVirtualTaskId } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
-import type { Task } from "../../types";
+import type { Category, Task } from "../../types";
 
 type Props = {
   task: Task;
+  category: Category;
   onOpen: () => void;
 };
 
-export default function TaskItem({ task, onOpen }: Props) {
+export default function TaskItem({ task, category, onOpen }: Props) {
   const toggleTaskDone = useAppStore((s) => s.toggleTaskDone);
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const [pop, setPop] = useState(false);
@@ -65,7 +67,9 @@ export default function TaskItem({ task, onOpen }: Props) {
       <div className="min-w-0 flex-1">
         <span
           className={`block break-words text-sm ${
-            task.done ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-900 dark:text-gray-100"
+            task.done
+              ? `text-gray-400 dark:text-gray-500 ${isMemoCategory(category.name) ? "" : "line-through"}`
+              : "text-gray-900 dark:text-gray-100"
           }`}
         >
           {task.title}

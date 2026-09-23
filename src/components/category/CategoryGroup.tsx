@@ -62,6 +62,7 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
             <TaskItem
               key={t.routineId ? `${t.routineId}:${t.date}` : t.id}
               task={t}
+              category={category}
               onOpen={() => onOpenTask(t.id)}
             />
           ))}

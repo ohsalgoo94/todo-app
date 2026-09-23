@@ -1,4 +1,5 @@
 import { useRef, type TouchEvent } from "react";
+import { isMemoCategory } from "../../lib/category";
 import { getMonthGrid, toDateKey } from "../../lib/date";
 import { getDisplayTasksForDate } from "../../lib/routine";
 import { useAppStore } from "../../store/useAppStore";
@@ -75,9 +76,9 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
             if (!t.done) continue;
             doneCountByCategory.set(t.categoryId, (doneCountByCategory.get(t.categoryId) ?? 0) + 1);
           }
-          // 이름이 "MEMO"인 카테고리는 완료해도 캘린더 원 색상에 반영하지 않는다
+          // "memo" 카테고리는 완료해도 캘린더 원 색상에 반영하지 않는다
           const segments = categories
-            .filter((c) => doneCountByCategory.has(c.id) && c.name.trim().toLowerCase() !== "memo")
+            .filter((c) => doneCountByCategory.has(c.id) && !isMemoCategory(c.name))
             .map((c) => ({ color: c.color, count: doneCountByCategory.get(c.id)! }));
 
           return (
