@@ -70,15 +70,18 @@ export default function Calendar({ viewedMonth, selectedDate, onSelectDate, onSh
             );
           }
 
-          const dateTasks = getDisplayTasksForDate(tasks, routines, dateKey);
+          // "memo" 카테고리 할 일은 캘린더 개수·색상 어디에도 반영하지 않는다
+          const dateTasks = getDisplayTasksForDate(tasks, routines, dateKey).filter((t) => {
+            const category = categories.find((c) => c.id === t.categoryId);
+            return !category || !isMemoCategory(category.name);
+          });
           const doneCountByCategory = new Map<string, number>();
           for (const t of dateTasks) {
             if (!t.done) continue;
             doneCountByCategory.set(t.categoryId, (doneCountByCategory.get(t.categoryId) ?? 0) + 1);
           }
-          // "memo" 카테고리는 완료해도 캘린더 원 색상에 반영하지 않는다
           const segments = categories
-            .filter((c) => doneCountByCategory.has(c.id) && !isMemoCategory(c.name))
+            .filter((c) => doneCountByCategory.has(c.id))
             .map((c) => ({ color: c.color, count: doneCountByCategory.get(c.id)! }));
 
           return (
