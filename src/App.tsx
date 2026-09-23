@@ -132,7 +132,7 @@ export default function App() {
   };
 
   return (
-    <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-gray-50 dark:bg-gray-900 lg:mx-0 lg:max-w-none lg:px-[15px]">
       {screen === "todo" ? (
         <>
           <header className="flex items-center justify-between px-4 py-3">
@@ -171,15 +171,19 @@ export default function App() {
 
           <CategoryMenu isOpen={isCategoryMenuOpen} onClose={() => setIsCategoryMenuOpen(false)} />
 
-          <main className="flex-1 overflow-y-auto px-2 pb-4">
-            <DayMemo date={selectedDate} />
-            <Calendar
-              viewedMonth={viewedMonth}
-              selectedDate={selectedDate}
-              onSelectDate={setSelectedDate}
-              onShiftMonth={handleShiftMonth}
-            />
-            <div className="px-2 pt-4">
+          <main className="flex-1 overflow-y-auto px-2 pb-4 lg:flex lg:gap-4 lg:overflow-hidden lg:px-0">
+            {/* 넓은 화면(1024px+): 왼쪽 고정폭(메모+캘린더) / 오른쪽 나머지(카테고리+할 일), 각자 따로 스크롤.
+                좁은 화면: 이 div들은 그냥 평범한 블록이라 지금처럼 한 줄로 이어서 스크롤된다. */}
+            <div className="lg:w-[480px] lg:shrink-0 lg:overflow-y-auto lg:px-2 lg:pb-4">
+              <DayMemo date={selectedDate} />
+              <Calendar
+                viewedMonth={viewedMonth}
+                selectedDate={selectedDate}
+                onSelectDate={setSelectedDate}
+                onShiftMonth={handleShiftMonth}
+              />
+            </div>
+            <div className="px-2 pt-4 lg:flex-1 lg:overflow-y-auto lg:pb-4">
               <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
                 {format(parseISO(selectedDate), "M월 d일 (EEE)", { locale: ko })}
               </p>
