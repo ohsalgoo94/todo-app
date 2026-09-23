@@ -3,6 +3,7 @@ import { useState } from "react";
 
 const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => i);
 const MINUTE_OPTIONS = Array.from({ length: 12 }, (_, i) => i * 5);
+const MINUTES_PER_DAY = 24 * 60;
 
 type Props = {
   date: string;
@@ -12,9 +13,61 @@ type Props = {
   onClose: () => void;
 };
 
+function TimeSelect({
+  label,
+  hour,
+  minute,
+  onHourChange,
+  onMinuteChange,
+}: {
+  label: string;
+  hour: number;
+  minute: number;
+  onHourChange: (h: number) => void;
+  onMinuteChange: (m: number) => void;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-xs font-medium text-gray-400 dark:text-gray-500">{label}</label>
+      <div className="flex items-center gap-2">
+        <select
+          value={hour}
+          onChange={(e) => onHourChange(Number(e.target.value))}
+          className="flex-1 rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        >
+          {HOUR_OPTIONS.map((h) => (
+            <option key={h} value={h}>
+              {String(h).padStart(2, "0")}시
+            </option>
+          ))}
+        </select>
+        <select
+          value={minute}
+          onChange={(e) => onMinuteChange(Number(e.target.value))}
+          className="flex-1 rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        >
+          {MINUTE_OPTIONS.map((m) => (
+            <option key={m} value={m}>
+              {String(m).padStart(2, "0")}분
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+
 export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete, onClose }: Props) {
-  const [hour, setHour] = useState(initialMinutes !== null ? Math.floor(initialMinutes / 60) : 0);
-  const [minute, setMinute] = useState(initialMinutes !== null ? initialMinutes % 60 : 0);
+  // 저장된 데이터는 근무 시간(분)만 갖고 있어서, 기존 기록을 편집할 땐 00:00을 시작으로 두고
+  // 그만큼 지난 시각을 종료로 잡아 같은 근무 시간이 되게 한다.
+  const [startHour, setStartHour] = useState(0);
+  const [startMinute, setStartMinute] = useState(0);
+  const [endHour, setEndHour] = useState(initialMinutes !== null ? Math.floor(initialMinutes / 60) % 24 : 0);
+  const [endMinute, setEndMinute] = useState(initialMinutes !== null ? initialMinutes % 60 : 0);
+
+  const startTotal = startHour * 60 + startMinute;
+  const endTotal = endHour * 60 + endMinute;
+  const duration = ((endTotal - startTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
@@ -26,30 +79,26 @@ export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete,
           {format(parseISO(date), "M월 d일")} 근무 시간
         </h3>
 
-        <div className="mb-6 flex items-center justify-center gap-3">
-          <select
-            value={hour}
-            onChange={(e) => setHour(Number(e.target.value))}
-            className="rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-          >
-            {HOUR_OPTIONS.map((h) => (
-              <option key={h} value={h}>
-                {h}시간
-              </option>
-            ))}
-          </select>
-          <select
-            value={minute}
-            onChange={(e) => setMinute(Number(e.target.value))}
-            className="rounded-full border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-          >
-            {MINUTE_OPTIONS.map((m) => (
-              <option key={m} value={m}>
-                {m}분
-              </option>
-            ))}
-          </select>
+        <div className="mb-4 space-y-3">
+          <TimeSelect
+            label="시작 시간"
+            hour={startHour}
+            minute={startMinute}
+            onHourChange={setStartHour}
+            onMinuteChange={setStartMinute}
+          />
+          <TimeSelect
+            label="종료 시간"
+            hour={endHour}
+            minute={endMinute}
+            onHourChange={setEndHour}
+            onMinuteChange={setEndMinute}
+          />
         </div>
+
+        <p className="mb-6 text-center text-sm text-gray-600 dark:text-gray-300">
+          일한 시간: <span className="font-semibold">{Math.floor(duration / 60)}시간 {duration % 60}분</span>
+        </p>
 
         <div className="flex justify-between gap-2">
           <button
@@ -62,7 +111,7 @@ export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete,
           </button>
           <button
             type="button"
-            onClick={() => onDone(hour * 60 + minute)}
+            onClick={() => onDone(duration)}
             className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white dark:bg-gray-100 dark:text-gray-900"
           >
             Done
