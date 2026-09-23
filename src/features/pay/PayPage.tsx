@@ -2,6 +2,7 @@ import { format, startOfMonth } from "date-fns";
 import { useState } from "react";
 import { shiftMonth } from "../../lib/date";
 import PayCalendar from "./components/PayCalendar";
+import PayOptionsCard from "./components/PayOptionsCard";
 import PaySummaryCard from "./components/PaySummaryCard";
 import WorkTimePicker from "./components/WorkTimePicker";
 import { calcMonthlyPay } from "./lib/calcPay";
@@ -46,18 +47,23 @@ export default function PayPage() {
       <PayCalendar
         viewedMonth={viewedMonth}
         selectedDate={selectedDate}
+        nightPayEnabled={options.nightPay}
         onSelectDate={setSelectedDate}
         onShiftMonth={handleShiftMonth}
       />
 
       <PaySummaryCard result={result} />
 
+      <PayOptionsCard />
+
       {selectedDate && (
         <WorkTimePicker
           date={selectedDate}
           initialMinutes={records[selectedDate]?.minutes ?? null}
-          onDone={(minutes) => {
-            setWorkRecord(selectedDate, { minutes, nightMinutes: records[selectedDate]?.nightMinutes ?? 0 });
+          initialNightMinutes={records[selectedDate]?.nightMinutes ?? 0}
+          nightPayEnabled={options.nightPay}
+          onDone={(minutes, nightMinutes) => {
+            setWorkRecord(selectedDate, { minutes, nightMinutes });
             setSelectedDate(null);
           }}
           onDelete={() => {

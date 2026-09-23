@@ -9,11 +9,12 @@ const SWIPE_THRESHOLD_PX = 50;
 type Props = {
   viewedMonth: Date;
   selectedDate: string | null;
+  nightPayEnabled: boolean;
   onSelectDate: (dateKey: string) => void;
   onShiftMonth: (delta: number) => void;
 };
 
-export default function PayCalendar({ viewedMonth, selectedDate, onSelectDate, onShiftMonth }: Props) {
+export default function PayCalendar({ viewedMonth, selectedDate, nightPayEnabled, onSelectDate, onShiftMonth }: Props) {
   const records = usePayStore((s) => s.records);
   const touchStartX = useRef<number | null>(null);
 
@@ -57,6 +58,7 @@ export default function PayCalendar({ viewedMonth, selectedDate, onSelectDate, o
               isToday={dateKey === todayKey}
               isSelected={dateKey === selectedDate}
               workMinutes={records[dateKey]?.minutes ?? null}
+              hasNightWork={nightPayEnabled && (records[dateKey]?.nightMinutes ?? 0) > 0}
               onSelect={() => onSelectDate(dateKey)}
             />
           );

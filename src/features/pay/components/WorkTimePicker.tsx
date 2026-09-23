@@ -8,7 +8,9 @@ const MINUTES_PER_DAY = 24 * 60;
 type Props = {
   date: string;
   initialMinutes: number | null;
-  onDone: (minutes: number) => void;
+  initialNightMinutes: number;
+  nightPayEnabled: boolean;
+  onDone: (minutes: number, nightMinutes: number) => void;
   onDelete: () => void;
   onClose: () => void;
 };
@@ -57,7 +59,15 @@ function TimeSelect({
   );
 }
 
-export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete, onClose }: Props) {
+export default function WorkTimePicker({
+  date,
+  initialMinutes,
+  initialNightMinutes,
+  nightPayEnabled,
+  onDone,
+  onDelete,
+  onClose,
+}: Props) {
   // 저장된 데이터는 근무 시간(분)만 갖고 있어서, 기존 기록을 편집할 땐 00:00을 시작으로 두고
   // 그만큼 지난 시각을 종료로 잡아 같은 근무 시간이 되게 한다.
   const [startHour, setStartHour] = useState(0);
@@ -65,9 +75,21 @@ export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete,
   const [endHour, setEndHour] = useState(initialMinutes !== null ? Math.floor(initialMinutes / 60) % 24 : 0);
   const [endMinute, setEndMinute] = useState(initialMinutes !== null ? initialMinutes % 60 : 0);
 
+  const [nightHour, setNightHour] = useState(Math.floor(initialNightMinutes / 60));
+  const [nightMinute, setNightMinute] = useState(initialNightMinutes % 60);
+
   const startTotal = startHour * 60 + startMinute;
   const endTotal = endHour * 60 + endMinute;
   const duration = ((endTotal - startTotal) % MINUTES_PER_DAY + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+
+  const nightDuration = nightHour * 60 + nightMinute;
+  const nightExceeds = nightPayEnabled && nightDuration > duration;
+
+  const handleDone = () => {
+    if (nightExceeds) return;
+    // 야간수당이 꺼져 있으면 입력칸이 안 보이니, 기존에 저장돼 있던 야간 시간을 그대로 유지한다
+    onDone(duration, nightPayEnabled ? nightDuration : initialNightMinutes);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
@@ -96,9 +118,24 @@ export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete,
           />
         </div>
 
-        <p className="mb-6 text-center text-sm text-gray-600 dark:text-gray-300">
+        <p className="mb-4 text-center text-sm text-gray-600 dark:text-gray-300">
           일한 시간: <span className="font-semibold">{Math.floor(duration / 60)}시간 {duration % 60}분</span>
         </p>
+
+        {nightPayEnabled && (
+          <div className="mb-4">
+            <TimeSelect
+              label="그중 야간 근무 (22시~06시)"
+              hour={nightHour}
+              minute={nightMinute}
+              onHourChange={setNightHour}
+              onMinuteChange={setNightMinute}
+            />
+            {nightExceeds && (
+              <p className="mt-1 text-xs text-rose-500">야간 시간은 총 근무 시간보다 길 수 없어요.</p>
+            )}
+          </div>
+        )}
 
         <div className="flex justify-between gap-2">
           <button
@@ -111,8 +148,9 @@ export default function WorkTimePicker({ date, initialMinutes, onDone, onDelete,
           </button>
           <button
             type="button"
-            onClick={() => onDone(duration)}
-            className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white dark:bg-gray-100 dark:text-gray-900"
+            onClick={handleDone}
+            disabled={nightExceeds}
+            className="rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 dark:bg-gray-100 dark:text-gray-900"
           >
             Done
           </button>
