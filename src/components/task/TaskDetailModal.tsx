@@ -76,6 +76,9 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
   const handleShiftDay = () => {
     const nextDate = isPast ? todayKey : toDateKey(addDays(parseISO(task.date), 1));
     updateTask(resolveRealId(), { date: nextDate });
+    // 날짜가 바뀌면 지금 보고 있던 날짜 기준 목록에선 이 할 일이 사라지므로 창을 닫는다.
+    // 안 닫으면 선택된 할 일 id가 남아있다가, 나중에 그 새 날짜를 클릭했을 때 창이 다시 떠버린다.
+    onClose();
   };
 
   return (
@@ -195,6 +198,8 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
           onConfirm={(date) => {
             updateTask(resolveRealId(), { date });
             setIsDatePickerOpen(false);
+            // 같은 이유로(위 handleShiftDay 참고) 날짜 변경 후에는 상세창도 같이 닫는다
+            onClose();
           }}
           onClose={() => setIsDatePickerOpen(false)}
         />
