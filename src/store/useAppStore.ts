@@ -24,6 +24,7 @@ type AppStore = AppData & {
   moveTaskToCategory: (taskId: string, categoryId: string) => void;
   reorderCategories: (orderedCategoryIds: string[]) => void;
   restoreFromBackup: (data: AppData) => void;
+  renameRoutine: (routineId: string, title: string) => void;
 };
 
 // zustand persist 기본 포맷은 {state, version}으로 한 겹 감싸는데,
@@ -193,6 +194,13 @@ export const useAppStore = create<AppStore>()(
           }),
         })),
       restoreFromBackup: (data) => set(() => ({ ...data })),
+      // 루틴 할 일의 이름을 바꾸면, 완료되지 않은 나머지 모든 회차(과거에 이미 실제 Task로 저장된 것 포함)와
+      // 루틴 자체의 이름도 같이 바꿔서, 아직 계산 안 된 미래 회차도 새 이름으로 나오게 한다.
+      renameRoutine: (routineId, title) =>
+        set((s) => ({
+          routines: s.routines.map((r) => (r.id === routineId ? { ...r, title } : r)),
+          tasks: s.tasks.map((t) => (t.routineId === routineId && !t.done ? { ...t, title } : t)),
+        })),
     }),
     {
       name: STORAGE_KEY,

@@ -20,6 +20,7 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const deleteRoutineOccurrence = useAppStore((s) => s.deleteRoutineOccurrence);
   const endRoutineFrom = useAppStore((s) => s.endRoutineFrom);
+  const renameRoutine = useAppStore((s) => s.renameRoutine);
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(task.title);
@@ -41,7 +42,14 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
 
   const saveTitle = () => {
     const title = titleDraft.trim();
-    if (title) updateTask(resolveRealId(), { title });
+    if (title) {
+      // 루틴 할 일은 이름을 바꾸면 완료 안 된 나머지 회차와 루틴 자체 이름도 같이 바뀐다
+      if (task.routineId) {
+        renameRoutine(task.routineId, title);
+      } else {
+        updateTask(resolveRealId(), { title });
+      }
+    }
     setIsEditingTitle(false);
   };
 

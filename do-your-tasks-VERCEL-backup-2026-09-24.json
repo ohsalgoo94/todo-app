@@ -1,0 +1,612 @@
+{
+  "version": 1,
+  "deviceId": "00e76f9b-7c15-4f42-98ce-72f5b2e0c109",
+  "categories": [
+    {
+      "id": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "name": "루틴",
+      "color": "#D3968C",
+      "order": 0
+    },
+    {
+      "id": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "name": "08:00~16:00",
+      "color": "#839958",
+      "order": 1
+    },
+    {
+      "id": "a9df7e86-a170-4fd7-90ba-1c2c63d4bc7f",
+      "name": "16:00~00:00",
+      "color": "#105666",
+      "order": 2
+    },
+    {
+      "id": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "name": "MEMO",
+      "color": "#F7F4D5",
+      "order": 4
+    },
+    {
+      "id": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "name": "공부",
+      "color": "#0A3323",
+      "order": 3
+    }
+  ],
+  "tasks": [
+    {
+      "id": "44e47862-10b4-4564-b393-664c6a0b26d2",
+      "title": "일어나자마자 양치 및 세수",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 0,
+      "doneAt": "2026-09-23T15:30:55.367Z",
+      "routineId": "40c62fe9-27db-4ba0-b8d1-ba6eff95de1e"
+    },
+    {
+      "id": "36bed3de-9a2f-4f08-88e2-807f0f08e167",
+      "title": "물 최소 다섯 잔 마시기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 1,
+      "routineId": "3a308c3b-5f6e-4c39-9177-ea9d46b404fe",
+      "doneAt": "2026-09-23T15:30:56.054Z"
+    },
+    {
+      "id": "46adb21b-6899-49f2-8aae-cd31e64fa729",
+      "title": "발씻기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 2,
+      "doneAt": "2026-09-23T15:30:56.741Z",
+      "routineId": "8ea68b12-b31b-4a82-9fab-8e0e42cd4fd6"
+    },
+    {
+      "id": "bca190e7-267a-4119-b48f-e8f55ac5e47d",
+      "title": "치실하기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "date": "2026-09-23",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 3,
+      "routineId": "1ece9c98-f064-4af5-b76b-e81693be5963"
+    },
+    {
+      "id": "62104269-5e06-446d-9bd3-e559bbb68d75",
+      "title": "설거지",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 6,
+      "doneAt": "2026-09-23T15:00:03.538Z"
+    },
+    {
+      "id": "3edb3f73-bab9-480b-a54a-1bf6637da29f",
+      "title": "씻기",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 0,
+      "doneAt": "2026-09-23T15:31:00.668Z"
+    },
+    {
+      "id": "7755e7fd-eb17-4384-bdd3-9d21817c0ee1",
+      "title": "36.5도의 물리학",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 1,
+      "doneAt": "2026-09-23T15:31:01.695Z"
+    },
+    {
+      "id": "acde62df-ab2f-4caa-af72-60a6f3232e22",
+      "title": "점심",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 2,
+      "doneAt": "2026-09-23T03:48:20.507Z"
+    },
+    {
+      "id": "1df967b8-4272-48f5-b1be-c808650fe2c5",
+      "title": "네트워크개론 과제",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "아 미친 이거 네트워크개론 전공서 빌려와야 함......\nWireshark는 다 끝냄.\n나머지 복습문제만 풀면 됨",
+      "alarm": null,
+      "order": 3,
+      "doneAt": "2026-09-23T03:48:23.047Z"
+    },
+    {
+      "id": "c67a1806-791a-4995-944b-ca9b5e126692",
+      "title": "운영체제",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 4,
+      "doneAt": "2026-09-23T04:02:05.171Z"
+    },
+    {
+      "id": "de4a6505-898e-4648-bf39-d78ee9fe9c45",
+      "title": "할머니 병원",
+      "categoryId": "563fdc56-49c6-4c2e-8619-453e971d2650",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 5,
+      "doneAt": "2026-09-23T15:00:07.521Z"
+    },
+    {
+      "id": "07c51885-5506-4abf-b943-7fa6f1efc15b",
+      "title": "네트워크개론 과제 마무리",
+      "categoryId": "a9df7e86-a170-4fd7-90ba-1c2c63d4bc7f",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "답 공유해주셔서 너무 감사합니다. 제가 이렇게 오픈소스 덕분에 살아갑니다. 정말 감사합니다.",
+      "alarm": null,
+      "order": 3,
+      "doneAt": "2026-09-23T15:00:14.996Z"
+    },
+    {
+      "id": "fcc501da-8266-4f15-bd25-fd061a20f30d",
+      "title": "승원이랑 ACC에서 만나기",
+      "categoryId": "a9df7e86-a170-4fd7-90ba-1c2c63d4bc7f",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 0,
+      "doneAt": "2026-09-23T15:00:12.425Z"
+    },
+    {
+      "id": "6e633109-492b-4e24-a604-9b0a739a9717",
+      "title": "동명동에서 저녁",
+      "categoryId": "a9df7e86-a170-4fd7-90ba-1c2c63d4bc7f",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "정희감\n나 깻잎고등어지짐밥, 승원이는 매콤들기름막국수\n둘이서 잣두부티라미슈도 먹음.\n여덟번째 파장 가서 2026년 월간 다이어리삼.\n어쩐지 20프로 할인이더라. \n걍 2027년에 쓰면서 하루씩 미루지 뭐.\n냥냥몬스터즈 럭키박스 샀는데 완전 좋음!!",
+      "alarm": null,
+      "order": 1,
+      "doneAt": "2026-09-23T15:00:13.515Z"
+    },
+    {
+      "id": "175b40e4-f365-44a2-85c0-8ff5b4b50c3a",
+      "title": "하늘마당에서 놀기",
+      "categoryId": "a9df7e86-a170-4fd7-90ba-1c2c63d4bc7f",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "peaceful haus에서 시그니처 글레이즈드 와플이랑 매실에이드, 자몽에이드 사서 하늘마당 감. 카페 찾느라 왔던 길 3번 와리가리함. 열심히 돌았음. 그리고 노래 틀고 사진 열심히 찍고 와플 먹고 아이패드로 승원이 학회 영상 구경함. ",
+      "alarm": null,
+      "order": 2,
+      "doneAt": "2026-09-23T15:00:14.317Z"
+    },
+    {
+      "id": "7e940b18-0c40-4514-8a41-d919f39f794e",
+      "title": "오늘이 2026년 끝나기 100일 전이래",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "뭐 하나 잡고 100일 하는 거 해야함.\n딱 3가지만 잡을 거고 일단 스쿼트 30개는 정해짐.\n나머지는 정하시긔~\n\n1. 스쿼트 30개\n2. 논문 5장 읽기",
+      "alarm": null,
+      "order": 0,
+      "doneAt": "2026-09-23T02:21:01.711Z"
+    },
+    {
+      "id": "4b70c21c-4c22-4050-90e6-ff9680609d9a",
+      "title": "메모 입력하면 줄바꿈이 실제로 적용되어 보이도록 바꿔야겠다.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 1,
+      "doneAt": "2026-09-23T04:12:55.101Z"
+    },
+    {
+      "id": "1d3e9fb6-eb60-46e9-9ad6-a538dc5583ed",
+      "title": "그리고 루틴 앞에 아이콘 없애달라 해야함.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "습관트레커에 차트를 할 거니까 따로 차트 만들기 X",
+      "alarm": null,
+      "order": 2,
+      "doneAt": "2026-09-23T04:12:55.931Z"
+    },
+    {
+      "id": "b5700b33-11db-4426-9fb7-55eded4a97bf",
+      "title": "월급계산기 아이콘 그냥 처음으로 돌려달라 해야겠다.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 3,
+      "doneAt": "2026-09-23T04:12:56.581Z"
+    },
+    {
+      "id": "855bf388-72b8-4fab-8b9f-e799bc869dea",
+      "title": "만일 카테고리에 MEMO라고 적히면 색깔 반영 안 되게 해야겠다.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 4,
+      "doneAt": "2026-09-23T04:12:59.026Z"
+    },
+    {
+      "id": "4e0fabed-1287-41d4-9205-51241ace7613",
+      "title": "취소선이랑 회색으로 변하는 것도 없앰",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 5,
+      "doneAt": "2026-09-23T04:18:21.514Z"
+    },
+    {
+      "id": "32251ab7-91ac-493e-bfd9-908f4893cdf1",
+      "title": "로그인을 가능하게 해서 핸드폰에서도 연결되게 해야겠다.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "근데 이거는 로그인하는 다른 거까지 끝내고.\n컴퓨터에서 알림 나오는 것도 뽀모도로 끝나고 수정해야겠음",
+      "alarm": null,
+      "order": 6,
+      "doneAt": "2026-09-23T04:20:46.840Z"
+    },
+    {
+      "id": "37bca76a-cbcf-4d0b-bdda-eb189760d4fc",
+      "title": "메모 검색 창도 만들어야겠다.",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 7,
+      "doneAt": "2026-09-23T04:34:27.755Z"
+    },
+    {
+      "id": "da3b608b-f5ca-4a5f-b9ff-33bdcd8c4e1e",
+      "title": "아니면 갑자기 메모가 존재하는 날을 알려줘서 메모를 확인해보세요! 하고 알림이 뜨게 해야겠음",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 8,
+      "doneAt": "2026-09-23T04:34:28.637Z"
+    },
+    {
+      "id": "01a34459-c55b-4091-89a4-6d573eaadfd0",
+      "title": "아 나 메모 모음 사이트도 필요함",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 9,
+      "doneAt": "2026-09-23T04:34:23.880Z"
+    },
+    {
+      "id": "a261fab0-b961-448e-a9f1-9c377b2b4e6f",
+      "title": "MEMO 카테고리용만 만들면 될 듯",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "8주 바이브 코딩 챌린지에 검색이 되는 메모장 있으니까 그거 하고 같이 하면 될 듯",
+      "alarm": null,
+      "order": 10,
+      "doneAt": "2026-09-23T04:34:24.806Z"
+    },
+    {
+      "id": "c89f5b08-12c2-4f4b-8f49-14db11a2a7b6",
+      "title": "모바일식이니까 웹 전체화면했을 때 캘린더랑 메모는 왼쪽, 할 일들은 오른쪽에 있게 배치해야겠음",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 11,
+      "doneAt": "2026-09-23T15:14:34.280Z"
+    },
+    {
+      "id": "0ebc0727-4eb6-41c5-a890-2f6464a1d718",
+      "title": "근데 이제 전체 화면이 아닐 경우에는 일자로 쭉 보이게",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 12,
+      "doneAt": "2026-09-23T15:14:35.377Z"
+    },
+    {
+      "id": "3b79e95c-1c38-4bae-98d7-6ea880dc0556",
+      "title": "습관 트레커에서는 100일 챌린지를 중점으러 해야겠음",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "매년 20일마다 이메일을 보내서 23일마다 100일 챌린지 할 수 있게 하는 거야. 근데 이러면 클로드 계속 구독해야하나? Router 무료 API 사용해서 해야겠다. 그리고 이번 년도는 내가 먼저 습관하고 있다가 7주 뒤에 딱 절반 왔을 때 어느정도 했나 판단할 겸하면서 만들어야겠음. ",
+      "alarm": null,
+      "order": 13,
+      "doneAt": "2026-09-23T04:34:19.016Z"
+    },
+    {
+      "id": "e1785a4a-ca22-4474-9298-e0fcef516aab",
+      "title": "네트워크개론 - 인터넷 응용 기본",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-09-28",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 0
+    },
+    {
+      "id": "ee75c8a4-1c2c-42a0-93b5-d098afc06bbe",
+      "title": "네트워크개론 - 웹과 HTTP",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-09-28",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 1
+    },
+    {
+      "id": "d2ad6b41-6be9-4302-bdd4-962d5770fc69",
+      "title": "네트워크개론 - 전자우편",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-09-28",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 2
+    },
+    {
+      "id": "083918c6-61ee-4836-a302-54f67e86e634",
+      "title": "네트워크개론 과제 4",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-09-30",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 0
+    },
+    {
+      "id": "4b1de746-150c-4cdf-82a6-59e047aff972",
+      "title": "네트워크개론 - DNS",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-05",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 0
+    },
+    {
+      "id": "c3f087c3-5afb-4def-b220-8ae6795a5735",
+      "title": "네트워크개론 - Streaming",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-05",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 1
+    },
+    {
+      "id": "ee8909a0-d340-4cd0-98c4-8cabb0f6f49a",
+      "title": "네트워크개론 - 소켓프로그래밍",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-05",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 2
+    },
+    {
+      "id": "f970c05c-b887-4d68-9184-d6d741c3f7ba",
+      "title": "인공지능 과제1 - 경험적탐색",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-09",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 0
+    },
+    {
+      "id": "74803db2-95eb-4a86-aa8f-1ef4e849f2c0",
+      "title": "인공지능 - 인공지능 소개1",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 0
+    },
+    {
+      "id": "537fb516-9544-4c71-b4fb-198639603cd8",
+      "title": "인공지능- 인공지능 소개2",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 1
+    },
+    {
+      "id": "1d0fde5e-df5a-47c9-9a17-b29ef3a117e4",
+      "title": "인공지능 - 인공지능 소개 3",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 2
+    },
+    {
+      "id": "2c8e509d-8cda-459e-85f2-3226c4d07371",
+      "title": "인공지능 - Alaas 사례",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 3
+    },
+    {
+      "id": "b793b372-871c-44ed-b457-8a1446c00805",
+      "title": "인공지능 - 탐색1",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 4
+    },
+    {
+      "id": "d073ebf6-ef17-4a7a-a7ce-f246fda9d776",
+      "title": "인공지능 - 탐색2",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 5
+    },
+    {
+      "id": "695e5583-00ee-4239-b57f-bca3e556e289",
+      "title": "인공지능 - 탐색3",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 6
+    },
+    {
+      "id": "5d9c73b8-cefc-4b0e-bb87-cc215124cb98",
+      "title": "인공지능 - 탐색4",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 7
+    },
+    {
+      "id": "7e364e00-b2e9-4568-9067-1f9b978cf916",
+      "title": "인공지능 - 게임트리1",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 8
+    },
+    {
+      "id": "e862668a-1caa-4747-9c43-e575c5882bbd",
+      "title": "인공지능 - 게임트리2",
+      "categoryId": "5f848fe7-43b1-4fb0-a7a7-b8ae06bd5377",
+      "date": "2026-10-02",
+      "done": false,
+      "memo": "",
+      "alarm": null,
+      "order": 9
+    },
+    {
+      "id": "37d83b5e-2a12-4bab-af62-410343636364",
+      "title": "너무너무 재밌었고 알찼는데 나 만오천보 걷는 등 정말 힘들었음...",
+      "categoryId": "7847611e-7355-4401-8e41-044ccdb3bdd2",
+      "date": "2026-09-23",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "order": 14,
+      "doneAt": "2026-09-23T15:04:15.654Z"
+    },
+    {
+      "id": "5ac49b76-b588-4029-a687-e59388769345",
+      "title": "일어나자마자 양치 및 세수",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "date": "2026-09-24",
+      "done": true,
+      "memo": "",
+      "alarm": null,
+      "routineId": "40c62fe9-27db-4ba0-b8d1-ba6eff95de1e",
+      "order": 0,
+      "doneAt": "2026-09-23T15:05:18.491Z"
+    }
+  ],
+  "routines": [
+    {
+      "id": "40c62fe9-27db-4ba0-b8d1-ba6eff95de1e",
+      "title": "일어나자마자 양치 및 세수",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "rule": {
+        "type": "daily"
+      },
+      "startDate": "2026-09-23",
+      "alarm": null,
+      "skippedDates": []
+    },
+    {
+      "id": "3a308c3b-5f6e-4c39-9177-ea9d46b404fe",
+      "title": "물 최소 다섯 잔 마시기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "rule": {
+        "type": "daily"
+      },
+      "startDate": "2026-09-23",
+      "alarm": null,
+      "skippedDates": []
+    },
+    {
+      "id": "8ea68b12-b31b-4a82-9fab-8e0e42cd4fd6",
+      "title": "발씻기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "rule": {
+        "type": "daily"
+      },
+      "startDate": "2026-09-23",
+      "alarm": null,
+      "skippedDates": []
+    },
+    {
+      "id": "1ece9c98-f064-4af5-b76b-e81693be5963",
+      "title": "치실하기",
+      "categoryId": "42d18c03-cff2-456a-9790-811575ff9b06",
+      "rule": {
+        "type": "daily"
+      },
+      "startDate": "2026-09-23",
+      "alarm": null,
+      "skippedDates": []
+    }
+  ],
+  "dayMemos": {
+    "2026-09-23": ""
+  }
+}
