@@ -68,19 +68,24 @@ export default function CategoryGroup({ category, date, onOpenTask }: Props) {
           ))}
         </SortableContext>
         {isAdding && (
-          <input
+          <textarea
             autoFocus
+            rows={1}
             value={draftTitle}
             onChange={(e) => setDraftTitle(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") saveDraft();
+              // 줄바꿈 없는 Enter는 저장, Shift+Enter나 붙여넣기로 들어온 줄바꿈은 그대로 유지
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                saveDraft();
+              }
               if (e.key === "Escape") setIsAdding(false);
             }}
             onBlur={() => {
               if (!draftTitle.trim()) setIsAdding(false);
             }}
             placeholder="할 일 입력 후 Enter"
-            className="w-full rounded-full border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+            className="max-h-32 w-full resize-none overflow-y-auto rounded-2xl border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           />
         )}
       </div>

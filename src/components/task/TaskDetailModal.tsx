@@ -92,22 +92,27 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
           onClick={(e) => e.stopPropagation()}
         >
           {isEditingTitle ? (
-            <input
+            <textarea
               autoFocus
+              rows={1}
               value={titleDraft}
               onChange={(e) => setTitleDraft(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") saveTitle();
+                // 줄바꿈 없는 Enter는 저장, Shift+Enter나 붙여넣기로 들어온 줄바꿈은 그대로 유지
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  saveTitle();
+                }
                 if (e.key === "Escape") {
                   setTitleDraft(task.title);
                   setIsEditingTitle(false);
                 }
               }}
               onBlur={saveTitle}
-              className="mb-4 w-full rounded-full border border-gray-200 px-3 py-2 text-lg font-semibold dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+              className="mb-4 max-h-32 w-full resize-none overflow-y-auto rounded-2xl border border-gray-200 px-3 py-2 text-lg font-semibold dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
             />
           ) : (
-            <h2 className="mb-4 break-words text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="mb-4 whitespace-pre-line break-words text-lg font-semibold text-gray-900 dark:text-gray-100">
               {task.title}
             </h2>
           )}

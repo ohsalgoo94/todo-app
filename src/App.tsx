@@ -196,7 +196,7 @@ export default function App() {
                 ))}
                 <DragOverlay>
                   {activeDragTask && (
-                    <div className="rounded-xl bg-white px-3 py-1.5 text-sm text-gray-900 shadow-lg dark:bg-gray-800 dark:text-gray-100">
+                    <div className="max-w-[240px] truncate rounded-xl bg-white px-3 py-1.5 text-sm text-gray-900 shadow-lg dark:bg-gray-800 dark:text-gray-100">
                       {activeDragTask.title}
                     </div>
                   )}
@@ -222,7 +222,7 @@ export default function App() {
           {deletedTask && (
             <div className="fixed inset-x-0 bottom-20 z-[70] flex justify-center px-4">
               <div className="flex items-center gap-3 rounded-full bg-gray-900 px-4 py-2.5 text-sm text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
-                <span>"{deletedTask.title}" 삭제됨</span>
+                <span className="max-w-[200px] truncate">"{deletedTask.title}" 삭제됨</span>
                 <button
                   type="button"
                   onClick={handleUndoDelete}

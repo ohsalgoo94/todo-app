@@ -69,7 +69,7 @@ export default function TaskItem({ task, category, onOpen }: Props) {
       </button>
       <div className="min-w-0 flex-1">
         <span
-          className={`block break-words text-sm ${
+          className={`block whitespace-pre-line break-words text-sm ${
             showDoneStyle ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-900 dark:text-gray-100"
           }`}
         >
