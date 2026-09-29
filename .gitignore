@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# 사용자가 내보낸 백업 파일 (실수로 커밋되지 않게)
+do-your-tasks-*backup*.json
