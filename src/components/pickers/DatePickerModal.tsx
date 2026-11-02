@@ -17,11 +17,11 @@ export default function DatePickerModal({ initialDate, onConfirm, onClose }: Pro
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4"
+      className="fixed inset-0 z-[60] flex animate-fade-in items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[420px] rounded-3xl bg-white p-4 dark:bg-gray-900"
+        className="w-full max-w-[420px] animate-modal-in rounded-3xl bg-white p-4 dark:bg-gray-900"
         onClick={(e) => e.stopPropagation()}
       >
         <Calendar

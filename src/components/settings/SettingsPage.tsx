@@ -1,7 +1,19 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { toDateKey } from "../../lib/date";
+import type { ThemePreference } from "../../lib/theme";
 import { useAppStore } from "../../store/useAppStore";
 import type { AppData } from "../../types";
+
+const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: "system", label: "시스템" },
+  { value: "light", label: "라이트" },
+  { value: "dark", label: "다크" },
+];
+
+type Props = {
+  themePreference: ThemePreference;
+  onThemePreferenceChange: (preference: ThemePreference) => void;
+};
 
 function isValidBackup(data: unknown): data is AppData {
   if (!data || typeof data !== "object") return false;
@@ -17,7 +29,7 @@ function isValidBackup(data: unknown): data is AppData {
   );
 }
 
-export default function SettingsPage() {
+export default function SettingsPage({ themePreference, onThemePreferenceChange }: Props) {
   const restoreFromBackup = useAppStore((s) => s.restoreFromBackup);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -63,8 +75,31 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto px-4 py-6">
+    <main className="flex-1 animate-fade-in overflow-y-auto px-4 py-6">
       <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">설정</h2>
+
+      <section className="mb-4 rounded-3xl bg-white p-5 shadow-sm dark:bg-gray-800">
+        <h3 className="mb-1 text-sm font-medium text-gray-900 dark:text-gray-100">화면 테마</h3>
+        <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+          시스템을 선택하면 기기의 다크 모드 설정을 그대로 따라가요.
+        </p>
+        <div className="flex gap-2">
+          {THEME_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => onThemePreferenceChange(option.value)}
+              className={`flex-1 rounded-full py-2 text-sm ${
+                themePreference === option.value
+                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                  : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="rounded-3xl bg-white p-5 shadow-sm dark:bg-gray-800">
         <h3 className="mb-1 text-sm font-medium text-gray-900 dark:text-gray-100">데이터 백업</h3>

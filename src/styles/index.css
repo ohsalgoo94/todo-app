@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 기본은 시스템 설정을 따르지만, <html>에 .dark가 있으면(설정에서 수동으로 켠 경우) 그걸 우선한다 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Pretendard", system-ui, sans-serif;
 }
@@ -15,10 +18,8 @@ body {
   background-color: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #111827;
-  }
+html.dark body {
+  background-color: #111827;
 }
 
 @keyframes check-pop {
@@ -35,6 +36,34 @@ body {
 
 .animate-check-pop {
   animation: check-pop 220ms ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms ease-out;
+}
+
+@keyframes modal-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-in {
+  animation: modal-pop-in 180ms ease-out;
 }
 
 /* 넓은 화면(2단 레이아웃)에서만 스크롤은 되지만 스크롤바는 안 보이게 한다 */

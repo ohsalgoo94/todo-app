@@ -84,11 +84,11 @@ export default function TaskDetailModal({ task, onClose, onDeleted, onMaterializ
   return (
     <>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+        className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/40 p-4"
         onClick={onClose}
       >
         <div
-          className="flex max-h-[66dvh] w-full max-w-[420px] flex-col overflow-y-auto rounded-3xl bg-white p-5 dark:bg-gray-900"
+          className="flex max-h-[66dvh] w-full max-w-[420px] animate-modal-in flex-col overflow-y-auto rounded-3xl bg-white p-5 dark:bg-gray-900"
           onClick={(e) => e.stopPropagation()}
         >
           {isEditingTitle ? (

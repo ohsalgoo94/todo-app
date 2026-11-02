@@ -78,9 +78,12 @@ export default function WorkTimePicker({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/40 p-4"
+      onClick={onClose}
+    >
       <div
-        className="w-full max-w-[360px] rounded-3xl bg-white p-5 dark:bg-gray-900"
+        className="w-full max-w-[360px] animate-modal-in rounded-3xl bg-white p-5 dark:bg-gray-900"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="mb-4 text-base font-semibold text-gray-900 dark:text-gray-100">

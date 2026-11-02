@@ -21,6 +21,7 @@ import TaskDetailModal from "./components/task/TaskDetailModal";
 import PayErrorBoundary from "./features/pay/PayErrorBoundary";
 import { shiftMonth, toDateKey } from "./lib/date";
 import { getDisplayTasksForDate, isVirtualTaskId } from "./lib/routine";
+import { useThemePreference } from "./lib/theme";
 import { useAppStore } from "./store/useAppStore";
 import type { Task } from "./types";
 
@@ -42,6 +43,7 @@ export default function App() {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [deletedTask, setDeletedTask] = useState<Task | null>(null);
   const [activeDragTaskId, setActiveDragTaskId] = useState<string | null>(null);
+  const [themePreference, setThemePreference] = useThemePreference();
   const restoreTask = useAppStore((s) => s.restoreTask);
   const materializeRoutineTask = useAppStore((s) => s.materializeRoutineTask);
   const reorderTasksWithinCategory = useAppStore((s) => s.reorderTasksWithinCategory);
@@ -135,7 +137,7 @@ export default function App() {
   return (
     <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-white dark:bg-gray-900 lg:max-w-[1200px] lg:px-[15px]">
       {screen === "todo" ? (
-        <>
+        <div className="flex flex-1 flex-col animate-fade-in">
           <header className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
               <button
@@ -221,7 +223,7 @@ export default function App() {
 
           {deletedTask && (
             <div className="fixed inset-x-0 bottom-20 z-[70] flex justify-center px-4">
-              <div className="flex items-center gap-3 rounded-full bg-gray-900 px-4 py-2.5 text-sm text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
+              <div className="flex animate-modal-in items-center gap-3 rounded-full bg-gray-900 px-4 py-2.5 text-sm text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
                 <span className="max-w-[200px] truncate">"{deletedTask.title}" 삭제됨</span>
                 <button
                   type="button"
@@ -233,7 +235,7 @@ export default function App() {
               </div>
             </div>
           )}
-        </>
+        </div>
       ) : screen === "pay" ? (
         <PayErrorBoundary>
           <Suspense
@@ -247,7 +249,7 @@ export default function App() {
           </Suspense>
         </PayErrorBoundary>
       ) : (
-        <SettingsPage />
+        <SettingsPage themePreference={themePreference} onThemePreferenceChange={setThemePreference} />
       )}
 
       <BottomBar

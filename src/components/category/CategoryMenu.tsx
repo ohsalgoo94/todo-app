@@ -82,7 +82,7 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />}
+      {isOpen && <div className="fixed inset-0 z-40 animate-fade-in bg-black/30" onClick={onClose} />}
       <aside
         className={`fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col bg-white shadow-xl transition-transform duration-200 dark:bg-gray-900 ${
           isOpen ? "translate-x-0" : "translate-x-full"

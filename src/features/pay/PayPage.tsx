@@ -23,7 +23,7 @@ export default function PayPage() {
   const result = calcMonthlyPay(records, viewedMonth.getFullYear(), viewedMonth.getMonth() + 1, options);
 
   return (
-    <main className="flex-1 overflow-y-auto px-2 pb-4">
+    <main className="flex-1 animate-fade-in overflow-y-auto px-2 pb-4">
       <div className="flex items-center justify-center gap-2 px-2 py-3">
         <button
           type="button"
