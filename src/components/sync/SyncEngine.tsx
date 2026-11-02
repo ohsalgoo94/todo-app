@@ -117,6 +117,26 @@ export default function SyncEngine() {
     };
   }, [user, pendingRemote, setStatus]);
 
+  // 오프라인이면 상태를 바로 표시하고, 연결이 돌아오면 밀린 로컬 변경을 올리고 놓친 서버 변경도 받아온다.
+  // (매번 전체 상태를 통째로 올리는 방식이라 별도의 "대기열"이 필요 없다 — 다음 성공한 push가 그동안
+  //  쌓인 변경을 전부 포함한다.)
+  useEffect(() => {
+    if (!user || pendingRemote) return;
+
+    const handleOffline = () => setStatus("offline");
+    const handleOnline = () => {
+      pushAndReportStatus(user.id);
+      syncDownAndMerge(user.id).catch(() => setStatus("error"));
+    };
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, [user, pendingRemote, setStatus]);
+
   if (!pendingRemote || !user) return null;
 
   const handleMerge = async () => {
