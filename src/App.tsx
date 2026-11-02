@@ -33,7 +33,7 @@ export default function App() {
   // 셀렉터 안에서 .slice().sort()로 매번 새 배열을 반환하면 무한 렌더 루프에 빠지므로,
   // 원본 배열만 구독하고 정렬은 렌더 본문에서 한다.
   const unsortedCategories = useAppStore((s) => s.categories);
-  const categories = unsortedCategories.slice().sort((a, b) => a.order - b.order);
+  const categories = unsortedCategories.filter((c) => !c.deleted).sort((a, b) => a.order - b.order);
   const allTasks = useAppStore((s) => s.tasks);
   const routines = useAppStore((s) => s.routines);
   const [viewedMonth, setViewedMonth] = useState(() => startOfMonth(new Date()));

@@ -28,7 +28,8 @@ export default function Calendar({
 }: Props) {
   const tasks = useAppStore((s) => s.tasks);
   const routines = useAppStore((s) => s.routines);
-  const categories = useAppStore((s) => s.categories);
+  const unfilteredCategories = useAppStore((s) => s.categories);
+  const categories = unfilteredCategories.filter((c) => !c.deleted);
   const dayMemos = useAppStore((s) => s.dayMemos);
   const touchStartX = useRef<number | null>(null);
 
@@ -105,7 +106,7 @@ export default function Calendar({
               isSelected={dateKey === selectedDate}
               totalCount={dateTasks.length}
               segments={segments}
-              hasMemo={Boolean(dayMemos[dateKey]?.trim())}
+              hasMemo={Boolean(dayMemos[dateKey]?.content.trim())}
               fillHeight={fillHeight}
               onSelect={() => onSelectDate(dateKey)}
             />

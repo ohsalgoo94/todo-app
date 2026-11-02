@@ -32,11 +32,14 @@ export function isVirtualTaskId(id: string): boolean {
 // 루틴은 규칙만 저장하고, 날짜별 할 일은 여기서 그때그때 계산한다.
 // 이미 실제 Task로 저장된(체크/편집/이동된) 날짜는 그 실제 데이터를 쓰고, 나머지만 가상 할 일로 채운다.
 export function getDisplayTasksForDate(tasks: Task[], routines: Routine[], date: string): Task[] {
-  const realTasksOnDate = tasks.filter((t) => t.date === date);
-  const materializedRoutineIds = new Set(realTasksOnDate.filter((t) => t.routineId).map((t) => t.routineId));
+  const realTasksOnDate = tasks.filter((t) => t.date === date && !t.deleted);
+  // 삭제된 회차(skippedDates로 처리되지 않고 deleted로만 표시된 경우)도 가상 할 일이 다시 채워지지 않게 포함한다
+  const materializedRoutineIds = new Set(
+    tasks.filter((t) => t.date === date && t.routineId).map((t) => t.routineId),
+  );
 
   const virtualTasks: Task[] = routines
-    .filter((r) => !materializedRoutineIds.has(r.id) && routineOccursOnDate(r, date))
+    .filter((r) => !r.deleted && !materializedRoutineIds.has(r.id) && routineOccursOnDate(r, date))
     .map((r, i) => ({
       id: getVirtualTaskId(r.id, date),
       title: r.title,
@@ -47,6 +50,8 @@ export function getDisplayTasksForDate(tasks: Task[], routines: Routine[], date:
       alarm: r.alarm,
       routineId: r.id,
       order: realTasksOnDate.length + i,
+      updatedAt: r.updatedAt,
+      deleted: false,
     }));
 
   return [...realTasksOnDate, ...virtualTasks].sort((a, b) => a.order - b.order);

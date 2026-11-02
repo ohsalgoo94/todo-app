@@ -15,7 +15,7 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
   // 셀렉터 안에서 .slice().sort()로 매번 새 배열을 반환하면 무한 렌더 루프에 빠지므로,
   // 원본 배열만 구독하고 정렬은 렌더 본문에서 한다.
   const unsortedCategories = useAppStore((s) => s.categories);
-  const categories = unsortedCategories.slice().sort((a, b) => a.order - b.order);
+  const categories = unsortedCategories.filter((c) => !c.deleted).sort((a, b) => a.order - b.order);
   const tasks = useAppStore((s) => s.tasks);
   const addCategory = useAppStore((s) => s.addCategory);
   const updateCategory = useAppStore((s) => s.updateCategory);
@@ -63,7 +63,7 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
   };
 
   const handleDelete = (id: string, name: string) => {
-    const taskCount = tasks.filter((t) => t.categoryId === id).length;
+    const taskCount = tasks.filter((t) => t.categoryId === id && !t.deleted).length;
     const warning = taskCount > 0 ? `\n이 카테고리의 할 일 ${taskCount}개도 함께 삭제됩니다.` : "";
     if (!confirm(`"${name}" 카테고리를 삭제할까요?${warning}`)) return;
     deleteCategory(id);

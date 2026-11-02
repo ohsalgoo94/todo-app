@@ -6,13 +6,13 @@ type Props = {
 };
 
 export default function DayMemo({ date }: Props) {
-  const savedMemo = useAppStore((s) => s.dayMemos[date] ?? "");
+  const savedMemo = useAppStore((s) => s.dayMemos[date]?.content ?? "");
   const setDayMemo = useAppStore((s) => s.setDayMemo);
   const [draft, setDraft] = useState(savedMemo);
 
   // 날짜가 바뀌면 저장 안 한 내용은 버리고 그 날짜의 저장된 메모를 보여준다
   useEffect(() => {
-    setDraft(useAppStore.getState().dayMemos[date] ?? "");
+    setDraft(useAppStore.getState().dayMemos[date]?.content ?? "");
   }, [date]);
 
   const isDirty = draft !== savedMemo;
