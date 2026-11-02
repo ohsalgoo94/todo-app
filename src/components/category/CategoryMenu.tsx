@@ -5,6 +5,7 @@ import { useState } from "react";
 import defaults from "../../data/defaults.json";
 import { useAppStore } from "../../store/useAppStore";
 import type { Category } from "../../types";
+import AccountSection from "../auth/AccountSection";
 
 type Props = {
   isOpen: boolean;
@@ -89,6 +90,7 @@ export default function CategoryMenu({ isOpen, onClose }: Props) {
         }`}
       >
         <div className="flex-1 overflow-y-auto p-4">
+          <AccountSection />
           <h2 className="mb-3 font-semibold text-gray-900 dark:text-gray-100">카테고리</h2>
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext items={categories.map((c) => c.id)} strategy={verticalListSortingStrategy}>
