@@ -6,10 +6,10 @@ import PayOptionsCard from "./components/PayOptionsCard";
 import PaySummaryCard from "./components/PaySummaryCard";
 import WorkTimePicker from "./components/WorkTimePicker";
 import { calcMonthlyPay } from "./lib/calcPay";
-import { usePayStore } from "./store/usePayStore";
+import { usePayStore, visibleWorkRecords } from "./store/usePayStore";
 
 export default function PayPage() {
-  const records = usePayStore((s) => s.records);
+  const records = visibleWorkRecords(usePayStore((s) => s.records));
   const options = usePayStore((s) => s.options);
   const setWorkRecord = usePayStore((s) => s.setWorkRecord);
   const deleteWorkRecord = usePayStore((s) => s.deleteWorkRecord);

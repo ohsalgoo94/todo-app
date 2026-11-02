@@ -2,14 +2,11 @@ import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 import defaults from "../data/defaults.json";
 import { addDaysToKey } from "../lib/date";
-import type { AppData, Category, DayMemo, Routine, SyncFields, Task } from "../types";
+import { withSyncFields } from "../lib/syncFields";
+import type { AppData, Category, DayMemo, Routine, Task } from "../types";
 
 const STORAGE_KEY = "todo-app:v2";
 const LEGACY_STORAGE_KEY = "todo-app:v1"; // 복구용으로 지우지 않고 그대로 둔다
-
-function withSyncFields<T extends Partial<SyncFields>>(item: T, now: string): T & SyncFields {
-  return { ...item, updatedAt: item.updatedAt ?? now, deleted: item.deleted ?? false };
-}
 
 // v1(동기화 필드 없음)이든 v2든, 들어오는 데이터에 빠진 동기화 필드를 채워서 항상 같은 모양으로 맞춘다.
 // localStorage 마이그레이션과 백업 파일 가져오기 양쪽에서 같이 쓴다.

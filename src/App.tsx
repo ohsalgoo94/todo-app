@@ -21,6 +21,7 @@ import SyncEngine from "./components/sync/SyncEngine";
 import SyncStatusDot from "./components/sync/SyncStatusDot";
 import TaskDetailModal from "./components/task/TaskDetailModal";
 import PayErrorBoundary from "./features/pay/PayErrorBoundary";
+import PaySyncEngine from "./features/pay/sync/PaySyncEngine";
 import { shiftMonth, toDateKey } from "./lib/date";
 import { getDisplayTasksForDate, isVirtualTaskId } from "./lib/routine";
 import { useThemePreference } from "./lib/theme";
@@ -139,6 +140,7 @@ export default function App() {
   return (
     <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-white dark:bg-gray-900 lg:max-w-[1200px] lg:px-[15px]">
       <SyncEngine />
+      <PaySyncEngine />
       {screen === "todo" ? (
         <div className="flex flex-1 flex-col animate-fade-in">
           <header className="flex items-center justify-between px-4 py-3">

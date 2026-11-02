@@ -1,6 +1,6 @@
 import { useRef, type TouchEvent } from "react";
 import { getMonthGrid, toDateKey } from "../../../lib/date";
-import { usePayStore } from "../store/usePayStore";
+import { usePayStore, visibleWorkRecords } from "../store/usePayStore";
 import PayDayCell from "./PayDayCell";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function PayCalendar({ viewedMonth, selectedDate, nightPayEnabled, onSelectDate, onShiftMonth }: Props) {
-  const records = usePayStore((s) => s.records);
+  const records = visibleWorkRecords(usePayStore((s) => s.records));
   const touchStartX = useRef<number | null>(null);
 
   const days = getMonthGrid(viewedMonth);

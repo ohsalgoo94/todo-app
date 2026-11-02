@@ -3,6 +3,7 @@ import { useAuthUser } from "../../lib/auth";
 import { supabase } from "../../lib/supabase";
 import { clearLinkedAccountId } from "../../lib/syncLinkedAccount";
 import { useManualSync } from "../../lib/useManualSync";
+import { usePayStore } from "../../features/pay/store/usePayStore";
 import { useAppStore } from "../../store/useAppStore";
 import { useSyncStatusStore } from "../../store/useSyncStatusStore";
 import AuthModal from "./AuthModal";
@@ -19,6 +20,7 @@ export default function AccountSection() {
     setIsLogoutConfirmOpen(false);
     await supabase.auth.signOut();
     useAppStore.getState().resetToDefault();
+    usePayStore.getState().resetToDefault();
     clearLinkedAccountId();
   };
 
