@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthUser } from "../../lib/auth";
 import { supabase } from "../../lib/supabase";
+import { clearLinkedAccountId } from "../../lib/syncLinkedAccount";
 import { useManualSync } from "../../lib/useManualSync";
 import { useAppStore } from "../../store/useAppStore";
 import { useSyncStatusStore } from "../../store/useSyncStatusStore";
@@ -18,6 +19,7 @@ export default function AccountSection() {
     setIsLogoutConfirmOpen(false);
     await supabase.auth.signOut();
     useAppStore.getState().resetToDefault();
+    clearLinkedAccountId();
   };
 
   if (loading) return <div className="mb-4 h-11" />;
