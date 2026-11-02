@@ -1,5 +1,5 @@
 import { useRef, useState, type ChangeEvent } from "react";
-import { toDateKey } from "../../lib/date";
+import { downloadBackup } from "../../lib/backup";
 import type { ThemePreference } from "../../lib/theme";
 import { useAppStore } from "../../store/useAppStore";
 import type { AppData } from "../../types";
@@ -37,21 +37,14 @@ export default function SettingsPage({ themePreference, onThemePreferenceChange 
 
   const handleExport = () => {
     const s = useAppStore.getState();
-    const data: AppData = {
+    downloadBackup({
       version: s.version,
       deviceId: s.deviceId,
       categories: s.categories,
       tasks: s.tasks,
       routines: s.routines,
       dayMemos: s.dayMemos,
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `do-your-tasks-backup-${toDateKey(new Date())}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    });
   };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {

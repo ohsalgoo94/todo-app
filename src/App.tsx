@@ -17,6 +17,8 @@ import CategoryMenu from "./components/category/CategoryMenu";
 import BottomBar from "./components/layout/BottomBar";
 import DayMemo from "./components/memo/DayMemo";
 import SettingsPage from "./components/settings/SettingsPage";
+import SyncEngine from "./components/sync/SyncEngine";
+import SyncStatusDot from "./components/sync/SyncStatusDot";
 import TaskDetailModal from "./components/task/TaskDetailModal";
 import PayErrorBoundary from "./features/pay/PayErrorBoundary";
 import { shiftMonth, toDateKey } from "./lib/date";
@@ -136,6 +138,7 @@ export default function App() {
 
   return (
     <div className="mx-auto flex h-dvh max-w-[480px] flex-col bg-white dark:bg-gray-900 lg:max-w-[1200px] lg:px-[15px]">
+      <SyncEngine />
       {screen === "todo" ? (
         <div className="flex flex-1 flex-col animate-fade-in">
           <header className="flex items-center justify-between px-4 py-3">
@@ -160,16 +163,19 @@ export default function App() {
                 ›
               </button>
             </div>
-            <button
-              type="button"
-              aria-label="카테고리 메뉴"
-              onClick={() => setIsCategoryMenuOpen(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-gray-700 active:bg-gray-100 dark:text-gray-200 dark:active:bg-gray-800"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                <path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z" />
-              </svg>
-            </button>
+            <div className="flex items-center">
+              <SyncStatusDot />
+              <button
+                type="button"
+                aria-label="카테고리 메뉴"
+                onClick={() => setIsCategoryMenuOpen(true)}
+                className="flex h-11 w-11 items-center justify-center rounded-full text-gray-700 active:bg-gray-100 dark:text-gray-200 dark:active:bg-gray-800"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+                  <path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z" />
+                </svg>
+              </button>
+            </div>
           </header>
 
           <CategoryMenu isOpen={isCategoryMenuOpen} onClose={() => setIsCategoryMenuOpen(false)} />
