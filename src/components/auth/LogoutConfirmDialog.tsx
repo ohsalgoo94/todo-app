@@ -1,5 +1,4 @@
-import { downloadBackup } from "../../lib/backup";
-import { useAppStore } from "../../store/useAppStore";
+import { downloadFullBackup } from "../../lib/backup";
 
 type Props = {
   onConfirm: () => void;
@@ -18,11 +17,11 @@ export default function LogoutConfirmDialog({ onConfirm, onClose }: Props) {
       >
         <h2 className="mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">로그아웃할까요?</h2>
         <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-          로그아웃하면 이 기기에 저장된 할 일이 지워져요. (계정 데이터는 서버에 안전하게 남아있어요)
+          로그아웃하면 이 기기에 저장된 할 일과 알바 계산기 기록이 지워져요. (계정 데이터는 서버에 안전하게 남아있어요)
         </p>
         <button
           type="button"
-          onClick={() => downloadBackup(useAppStore.getState())}
+          onClick={downloadFullBackup}
           className="mb-2 w-full rounded-full bg-gray-100 py-2.5 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200"
         >
           백업 다운로드

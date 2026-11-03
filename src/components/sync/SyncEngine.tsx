@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuthUser } from "../../lib/auth";
-import { downloadBackup } from "../../lib/backup";
+import { downloadBackup, downloadFullBackup } from "../../lib/backup";
 import { supabase } from "../../lib/supabase";
 import {
   fetchRemoteData,
@@ -159,9 +159,9 @@ export default function SyncEngine() {
     }
   };
 
-  // "계정 데이터 사용": 이 기기 데이터는 버리고(지우기 전 파일로 백업), 계정 데이터로 이 기기를 완전히 덮어쓴다.
+  // "계정 데이터 사용": 이 기기 데이터는 버리고(지우기 전 파일로 백업, 알바 계산기 기록 포함), 계정 데이터로 이 기기를 완전히 덮어쓴다.
   const handleUseAccountOnly = async () => {
-    downloadBackup(useAppStore.getState());
+    downloadFullBackup();
     const { deviceId } = useAppStore.getState();
     useAppStore.getState().restoreFromBackup({ version: 2, deviceId, ...pendingRemote });
     setPendingRemote(null);
