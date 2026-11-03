@@ -2,10 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthUser } from "../../lib/auth";
 import { downloadBackup } from "../../lib/backup";
 import { supabase } from "../../lib/supabase";
-import { fetchRemoteData, isRemoteDataEmpty, pushAndReportStatus, type RemoteData } from "../../lib/syncApi";
+import {
+  fetchRemoteData,
+  isRemoteDataEmpty,
+  pushAndReportStatus,
+  replaceRemoteData,
+  type RemoteData,
+} from "../../lib/syncApi";
 import { syncDownAndMerge } from "../../lib/syncDown";
 import { getLinkedAccountId, setLinkedAccountId } from "../../lib/syncLinkedAccount";
-import { mergeAppData } from "../../lib/syncMerge";
 import { useAppStore } from "../../store/useAppStore";
 import { useSyncStatusStore } from "../../store/useSyncStatusStore";
 import GuestMergeDialog from "./GuestMergeDialog";
@@ -139,15 +144,23 @@ export default function SyncEngine() {
 
   if (!pendingRemote || !user) return null;
 
-  const handleMerge = async () => {
-    const merged = mergeAppData(useAppStore.getState(), pendingRemote);
-    useAppStore.getState().restoreFromBackup(merged);
+  // "이 기기 데이터 사용": 계정 쪽 데이터는 버리고(지우기 전 파일로 백업), 이 기기 데이터로 계정을 완전히 덮어쓴다.
+  const handleUseDeviceOnly = async () => {
+    const { deviceId } = useAppStore.getState();
+    downloadBackup({ version: 2, deviceId, ...pendingRemote });
     setPendingRemote(null);
     setLinkedAccountId(user.id);
-    await pushAndReportStatus(user.id);
+    useSyncStatusStore.getState().setStatus("syncing");
+    try {
+      await replaceRemoteData(user.id, useAppStore.getState());
+      useSyncStatusStore.getState().setSynced(new Date().toISOString());
+    } catch {
+      useSyncStatusStore.getState().setStatus(navigator.onLine ? "error" : "offline");
+    }
   };
 
-  const handleUseServerOnly = async () => {
+  // "계정 데이터 사용": 이 기기 데이터는 버리고(지우기 전 파일로 백업), 계정 데이터로 이 기기를 완전히 덮어쓴다.
+  const handleUseAccountOnly = async () => {
     downloadBackup(useAppStore.getState());
     const { deviceId } = useAppStore.getState();
     useAppStore.getState().restoreFromBackup({ version: 2, deviceId, ...pendingRemote });
@@ -156,5 +169,5 @@ export default function SyncEngine() {
     useSyncStatusStore.getState().setSynced(new Date().toISOString());
   };
 
-  return <GuestMergeDialog onMerge={handleMerge} onUseServerOnly={handleUseServerOnly} />;
+  return <GuestMergeDialog onUseDeviceOnly={handleUseDeviceOnly} onUseAccountOnly={handleUseAccountOnly} />;
 }

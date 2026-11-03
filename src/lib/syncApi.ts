@@ -161,6 +161,22 @@ export async function pushLocalData(userId: string, data: AppData): Promise<void
   }
 }
 
+// 서버에 있던 기존 데이터를 전부 지우고 로컬 데이터로 다시 채운다.
+// ("이 기기 데이터 사용" 선택 시 계정 쪽 데이터를 완전히 대체하기 위한 것으로, upsert와 달리
+//  로컬에 없는 서버쪽 행도 삭제한다.)
+export async function replaceRemoteData(userId: string, data: AppData): Promise<void> {
+  const deletes = await Promise.all([
+    supabase.from("categories").delete().eq("user_id", userId),
+    supabase.from("tasks").delete().eq("user_id", userId),
+    supabase.from("routines").delete().eq("user_id", userId),
+    supabase.from("day_memos").delete().eq("user_id", userId),
+  ]);
+  for (const res of deletes) {
+    if (res.error) throw res.error;
+  }
+  await pushLocalData(userId, data);
+}
+
 // 수동/디바운스 업로드 양쪽에서 같이 쓰는 "올리고 상태 표시까지" 묶음
 export async function pushAndReportStatus(userId: string): Promise<void> {
   useSyncStatusStore.getState().setStatus("syncing");
