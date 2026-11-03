@@ -7,7 +7,7 @@ type Props = {
 
 export default function BottomBar({ activeScreen, onGoHome, onOpenPay, onOpenSettings }: Props) {
   return (
-    <nav className="flex items-center justify-center gap-8 border-t border-gray-200 bg-white py-2 dark:border-gray-800 dark:bg-gray-950">
+    <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto flex max-w-[480px] items-center justify-center gap-8 border-t border-gray-200 bg-white pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] dark:border-gray-800 dark:bg-gray-950 lg:max-w-[1200px]">
       <button
         type="button"
         onClick={onGoHome}

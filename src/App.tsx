@@ -182,7 +182,7 @@ export default function App() {
 
           <CategoryMenu isOpen={isCategoryMenuOpen} onClose={() => setIsCategoryMenuOpen(false)} />
 
-          <main className="flex-1 overflow-y-auto px-2 pb-4 lg:flex lg:gap-4 lg:overflow-hidden lg:px-0">
+          <main className="flex-1 overflow-y-auto px-2 pb-20 lg:flex lg:gap-4 lg:overflow-hidden lg:px-0 lg:pb-4">
             {/* 넓은 화면(1024px+): 왼쪽 고정폭(메모+캘린더, 세로로 꽉 채움, 스크롤 없음) /
                 오른쪽 나머지(카테고리+할 일, 스크롤은 되지만 스크롤바는 숨김).
                 좁은 화면: 이 div들은 그냥 평범한 블록이라 지금처럼 한 줄로 이어서 스크롤된다. */}
@@ -196,7 +196,7 @@ export default function App() {
                 fillHeight
               />
             </div>
-            <div className="lg-scrollbar-none px-2 pt-4 lg:flex-1 lg:overflow-y-auto lg:pb-4">
+            <div className="lg-scrollbar-none px-2 pt-4 lg:flex-1 lg:overflow-y-auto lg:pb-20">
               <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
                 {format(parseISO(selectedDate), "M월 d일 (EEE)", { locale: ko })}
               </p>
