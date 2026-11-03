@@ -113,6 +113,9 @@ export default function Calendar({
           );
         })}
       </div>
+      {/* 날짜 칸 아래 빈 공간을 떠안는 보이지 않는 칸. 날짜 그리드와 flex-1을 똑같이 나눠 가져서
+          남는 세로 공간의 절반만 날짜 칸이 커지는 데 쓰이게 한다 (나머지 절반은 이 칸이 가져감). */}
+      {fillHeight && <div className="lg:min-h-0 lg:flex-1" />}
     </div>
   );
 }
